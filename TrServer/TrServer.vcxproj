@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Base\Log.h" />
+    <ClInclude Include="Live\Buffer.h" />
+    <ClInclude Include="Live\InetAddress.h" />
+    <ClInclude Include="Live\MegParse.h" />
+    <ClInclude Include="Live\TcpConnection.h" />
+    <ClInclude Include="Live\TrConnection.h" />
+    <ClInclude Include="Live\TrDatabase.h" />
+    <ClInclude Include="Live\TrServer.h" />
+    <ClInclude Include="mail.h" />
+    <ClInclude Include="Scheduler\EPollPoller.h" />
+    <ClInclude Include="Scheduler\Event.h" />
+    <ClInclude Include="Scheduler\EventScheduler.h" />
+    <ClInclude Include="Scheduler\Poller.h" />
+    <ClInclude Include="Scheduler\SelectPoller.h" />
+    <ClInclude Include="Scheduler\SocketsOps.h" />
+    <ClInclude Include="Scheduler\UsageEnvironment.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Live\Buffer.cpp" />
+    <ClCompile Include="Live\InetAddress.cpp" />
+    <ClCompile Include="Live\TcpConnection.cpp" />
+    <ClCompile Include="Live\TrConnection.cpp" />
+    <ClCompile Include="Live\TrDatabase.cpp" />
+    <ClCompile Include="Live\TrServer.cpp" />
+    <ClCompile Include="mail.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Scheduler\EPollPoller.cpp" />
+    <ClCompile Include="Scheduler\Event.cpp" />
+    <ClCompile Include="Scheduler\EventScheduler.cpp" />
+    <ClCompile Include="Scheduler\Poller.cpp" />
+    <ClCompile Include="Scheduler\SelectPoller.cpp" />
+    <ClCompile Include="Scheduler\SocketsOps.cpp" />
+    <ClCompile Include="Scheduler\UsageEnvironment.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{39eb8d34-1f42-4d20-943c-49f86e3d1ccb}</ProjectGuid>
+    <Keyword>Linux</Keyword>
+    <RootNamespace>TrServer</RootNamespace>
+    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
+    <ApplicationType>Linux</ApplicationType>
+    <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
+    <TargetLinuxPlatform>Generic</TargetLinuxPlatform>
+    <LinuxProjectType>{2238F9CD-F817-4ECC-BD14-2524D2669B35}</LinuxProjectType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>/usr/include/mysql;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Scheduler;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Live;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Base;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;F:\Program Files\MySQL\MySQL Server 8.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\Program Files\MySQL\MySQL Server 8.0\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>/usr/include/mysql;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Scheduler;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Live;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Base;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;/www/server/mysql/include;/www/server/mysql/lib;C:\Program Files\MySQL\MySQL Server 8.0\include;E:\APP\Visual Studio\2022\Projects\TrServer\TrServer\Base;E:\APP\Visual Studio\2022\Projects\TrServer\TrServer\Live;E:\APP\Visual Studio\2022\Projects\TrServer\TrServer\Scheduler;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <IncludePath>/usr/include/mysql;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Scheduler;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Live;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Base;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <IncludePath>/usr/include/mysql;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Scheduler;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Live;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Base;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <IncludePath>/usr/include/mysql;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Scheduler;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Live;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Base;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <IncludePath>/usr/include/mysql;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Scheduler;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Live;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Base;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <IncludePath>/usr/include/mysql;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Scheduler;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Live;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Base;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <IncludePath>/usr/include/mysql;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Scheduler;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Live;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer（添加注释）\TrServer\Base;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer\TrServer\Scheduler;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer\TrServer\Live;/www/server/mysql/lib;/www/server/mysql/include;C:\Program Files\MySQL\MySQL Server 8.0\lib;C:\Program Files\MySQL\MySQL Server 8.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>/www/server/mysql/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;/www/server/mysql/include;/www/server/mysql/lib;C:\Program Files\MySQL\MySQL Server 8.0\include;C:\Program Files\MySQL\MySQL Server 8.0\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>
