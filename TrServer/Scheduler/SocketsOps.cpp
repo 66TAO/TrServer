@@ -43,7 +43,7 @@ bool sockets::bind(int sockfd, std::string ip, uint16_t port)                   
     //    return true;
     //}
 
-    struct sockaddr_in addr = { 0 };                  
+    struct sockaddr_in addr = { 0 };
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = inet_addr(ip.c_str());
     //    addr.sin_addr.S_un.S_addr = htonl(INADDR_ANY);

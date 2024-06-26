@@ -57,8 +57,11 @@
     <ClInclude Include="Scheduler\EPollPoller.h">
       <Filter>Scheduler</Filter>
     </ClInclude>
-    <ClInclude Include="mail.h">
+    <ClInclude Include="Live\mail.h">
       <Filter>Live</Filter>
+    </ClInclude>
+    <ClInclude Include="Scheduler\Timer.h">
+      <Filter>Scheduler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -102,8 +105,11 @@
     <ClCompile Include="Scheduler\EPollPoller.cpp">
       <Filter>Scheduler</Filter>
     </ClCompile>
-    <ClCompile Include="mail.cpp">
+    <ClCompile Include="Live\mail.cpp">
       <Filter>Live</Filter>
+    </ClCompile>
+    <ClCompile Include="Scheduler\Timer.cpp">
+      <Filter>Scheduler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

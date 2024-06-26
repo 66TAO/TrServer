@@ -13,7 +13,7 @@ EPollPoller::~EPollPoller()
 
 }
 
-EPollPoller* EPollPoller::createNew()                           
+EPollPoller* EPollPoller::createNew()
 {
     return new EPollPoller();                                   // ´´½¨Ò»¸öĞÂµÄ EPollPoller ÊµÀı²¢·µ»ØÖ¸Õë
     //    return New<SelectPoller>::allocate();
@@ -52,7 +52,7 @@ bool EPollPoller::updateIOEvent(IOEvent* event)                 // Ìí¼Ó»ò¸üĞÂÒ»¸
         mMaxNumSockets = 0;                             //Èç¹û mEventMap Îª¿Õ£¬Ôò½« mMaxNumSockets ÉèÖÃÎª 0£¬±íÊ¾Ã»ÓĞÈÎºÎÊÂ¼ş´æÔÚ
     else
         mMaxNumSockets = mEventMap.rbegin()->first + 1; //Èç¹û mEventMap ²»Îª¿Õ£¬Ôò»ñÈ¡ÊÂ¼şÓ³Éä±íÖĞ×îºóÒ»¸öÔªËØ£¬¼´×î´óµÄÎÄ¼şÃèÊö·û£¬²¢¼Ó 1£¬ÒÔ±£Ö¤ mMaxNumSockets ±íÊ¾µÄÊÇ¿ÉÓÃµÄÎÄ¼şÃèÊö·ûÊıÁ¿¡£
-                                                        //¸üĞÂ×î´óÎÄ¼şÃèÊö·û+1£¨map»á×Ô¶¯ÅÅĞò£©×îºóÒ»Î»
+    //¸üĞÂ×î´óÎÄ¼şÃèÊö·û+1£¨map»á×Ô¶¯ÅÅĞò£©×îºóÒ»Î»
 
     return true;
 }

@@ -4,7 +4,7 @@
 #include "../Base/Log.h"
 
 TriggerEvent* TriggerEvent::createNew(void* arg) {
-    return new TriggerEvent(arg);                           
+    return new TriggerEvent(arg);
 }
 
 TriggerEvent* TriggerEvent::createNew() {
@@ -52,9 +52,16 @@ bool TimerEvent::handleEvent()                              // TimerEventÀàµÄ´¦À
 
     return mIsStop;
 }
+
+
 void TimerEvent::stop() {                                   // TimerEventÀàµÄÍ£Ö¹·½·¨£¬ÓÃÓÚÍ£Ö¹¶¨Ê±Æ÷ÊÂ¼ş
     mIsStop = true;
 }
+
+void TimerEvent::start() {
+    mIsStop = false;
+}
+
 IOEvent* IOEvent::createNew(int fd, void* arg) {
     if (fd < 0)
         return NULL;
@@ -80,6 +87,7 @@ IOEvent::IOEvent(int fd, void* arg) :
 
     LOGI("IOEvent() fd=%d", mFd);
 }
+
 IOEvent::~IOEvent() {
     LOGI("~IOEvent() fd=%d", mFd);
 }

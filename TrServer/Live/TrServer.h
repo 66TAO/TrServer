@@ -2,6 +2,7 @@
 
 #include "../Scheduler/UsageEnvironment.h"
 #include "../Scheduler/Event.h"
+#include "../Scheduler/EventScheduler.h"
 #include "InetAddress.h"
 #include "TrDatabase.h"
 #include <map>

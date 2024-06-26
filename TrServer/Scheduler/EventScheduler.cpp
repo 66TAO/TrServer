@@ -4,6 +4,7 @@
 //#include "PollPoller.h"
 #include "EPollPoller.h"
 #include "../Base/Log.h"
+#include <iostream>
 
 #include <sys/eventfd.h>
 
@@ -37,6 +38,7 @@ EventScheduler::EventScheduler(PollerType type) : mQuit(false) {
         break;
     }
 
+    mTimerManager = TimerManager::createNew(this);
 }
 
 EventScheduler::~EventScheduler()                       // EventSchedulerÀàµÄÎö¹¹º¯Êı£¬ÊÍ·ÅÂÖÑ¯Æ÷¶ÔÏóµÄÄÚ´æ
@@ -55,7 +57,7 @@ bool EventScheduler::addTriggerEvent(TriggerEvent* event)               // ÏòÊÂ¼
 
 bool EventScheduler::addIOEvent(IOEvent* event)                         // ÏòÊÂ¼şµ÷¶ÈÆ÷Ìí¼ÓÒ»¸öIOÊÂ¼ş
 {
-    return mPoller->addIOEvent(event);                                  
+    return mPoller->addIOEvent(event);
 }
 
 bool EventScheduler::updateIOEvent(IOEvent* event)                      // ¸üĞÂÊÂ¼şµ÷¶ÈÆ÷ÖĞµÄÒ»¸öIOÊÂ¼ş
@@ -91,4 +93,18 @@ void EventScheduler::handleTriggerEvents()                                      
 
 Poller* EventScheduler::poller() {                                                  // ·µ»ØÊÂ¼şµ÷¶ÈÆ÷ÖĞÊ¹ÓÃµÄÂÖÑ¯Æ÷¶ÔÏó
     return mPoller;
+}
+
+Timer::TimerId EventScheduler::addTimerEventRunEvery(TimerEvent* event, Timer::TimeInterval interval)
+{
+    //std::cout << "add timerEvent " << event->getName() << " run every time, Interval = " << interval / 1000 << "s" << std::endl;
+    Timer::TimeStamp timeStamp = Timer::getCurTime();
+    timeStamp += interval;
+    return mTimerManager->addTimer(event, timeStamp, interval);
+}
+
+Timer::TimerId EventScheduler::resetTimerEvent(Timer::TimerId mtimeid, Timer::TimeInterval interval)
+{
+    std::cout << "rest timerEvent " << mtimeid << "  Interval = " << interval / 1000 << "s" << std::endl;
+    return mTimerManager->resetTimer(mtimeid, interval);
 }

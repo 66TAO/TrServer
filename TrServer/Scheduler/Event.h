@@ -1,6 +1,6 @@
 #pragma once
 typedef void (*EventCallback)(void*);//定义一个函数指针（指向返回值为void并且有一个void*参数的函数）（类中定义加typedef）
-                                      //typedef void(*T)(void*);    T t;    void func(void*)；   t = func;
+//typedef void(*T)(void*);    T t;    void func(void*)；   t = func;
 class TriggerEvent {
 public:
     static TriggerEvent* createNew(void* arg);
@@ -31,6 +31,7 @@ public:
     bool handleEvent();
 
     void stop();
+    void start();
 
 private:
     void* mArg;

@@ -9,99 +9,99 @@ std::map<std::string, int> device_match;			//第一个是键，第二个是值
 
 static void getPeerIp(int fd, std::string& ip)
 {
-    struct sockaddr_in addr;														// 创建一个 IPv4 地址结构体
-    socklen_t addrlen = sizeof(struct sockaddr_in);									// 获取地址结构体的大小
-    getpeername(fd, (struct sockaddr*)&addr, &addrlen);								// 使用 getpeername 函数获取与指定文件描述符相关联的对等端地址信息
-    ip = inet_ntoa(addr.sin_addr);													// 将对等端的 IP 地址转换为字符串，并存储在传入的 std::string 对象 ip 中
+	struct sockaddr_in addr;														// 创建一个 IPv4 地址结构体
+	socklen_t addrlen = sizeof(struct sockaddr_in);									// 获取地址结构体的大小
+	getpeername(fd, (struct sockaddr*)&addr, &addrlen);								// 使用 getpeername 函数获取与指定文件描述符相关联的对等端地址信息
+	ip = inet_ntoa(addr.sin_addr);													// 将对等端的 IP 地址转换为字符串，并存储在传入的 std::string 对象 ip 中
 }
 
 TrConnection* TrConnection::createNew(TrServer* TrServer, TrDatabase* TrDatabase, int clientFd)				// 创建一个新的 TrConnection 对象并返回指针
 {
-    return new TrConnection(TrServer, TrDatabase, clientFd);
+	return new TrConnection(TrServer, TrDatabase, clientFd);
 }
 
-TrConnection::TrConnection(TrServer* TrServer, TrDatabase* TrDatabase, int clientFd) :		
-    TcpConnection(TrServer->env(), clientFd),											// 调用 TcpConnection 的构造函数，传入 TrServer 的环境变量指针和客户端文件描述符
+TrConnection::TrConnection(TrServer* TrServer, TrDatabase* TrDatabase, int clientFd) :
+	TcpConnection(TrServer->env(), clientFd),											// 调用 TcpConnection 的构造函数，传入 TrServer 的环境变量指针和客户端文件描述符
 	Trdb(TrDatabase),																	// 初始化 Trdb 成员变量为传入的 TrDatabase 指针
-    clientfd_cur(clientFd)																// 初始化 clientfd_cur 成员变量为传入的客户端文件描述符
+	clientfd_cur(clientFd)																// 初始化 clientfd_cur 成员变量为传入的客户端文件描述符
 {
-    LOGI("TrConnection() mClientFd=%d", mClientFd);										// 输出日志，显示客户端文件描述符
-    getPeerIp(clientFd, mPeerIp);														// 获取与客户端连接的对等端 IP 地址，并存储到 mPeerIp 成员变量中
+	LOGI("TrConnection() mClientFd=%d", mClientFd);										// 输出日志，显示客户端文件描述符
+	getPeerIp(clientFd, mPeerIp);														// 获取与客户端连接的对等端 IP 地址，并存储到 mPeerIp 成员变量中
 
 }
 
 TrConnection::~TrConnection()
 {
-    LOGI("~TrConnection() mClientFd=%d", mClientFd);
+	LOGI("~TrConnection() mClientFd=%d", mClientFd);
 }
 
 void TrConnection::handleReadBytes()
 {
-    std::cout << mInputBuffer.getmessage()<< std::endl;
-    string meg = mInputBuffer.getmessage();							// 从输入缓冲区中获取完整的消息
-    string protocol = meg.substr(pct_st, pct_len);					// 提取消息中的协议字段
+	std::cout << mInputBuffer.getmessage() << std::endl;
+	string meg = mInputBuffer.getmessage();							// 从输入缓冲区中获取完整的消息
+	string protocol = meg.substr(pct_st, pct_len);					// 提取消息中的协议字段
 
-    if (protocol == ISR_REGIST)						// 根据协议字段分发消息处理函数
-    {
-        parse_04(meg);				//插入isr相关数据
-    }
-    else if (protocol == AP_REGIST)
-    {
-        parse_05(meg);				//注册or升级更新sap
-    }
-    else if (protocol == SAP_TRANS_DATA)
-    {
-        parse_06(meg);				//主要水质、空气分析 
-    }
-    else if (protocol == ISR_UPD_REGIST)
-    {
-        parse_22(meg);				//找到当前SIR设备和文件描述符fd(File descriptor)
-    }
-    else if (protocol == ISR_REPLY1)
-    {
-        parse_30();
-    }
-    else if (protocol == ISR_REPLY2)
-    {
-        parse_31();
-    }
-    else if (protocol == ISR_CHANGE)
-    {
-        parse_33(meg);				//测试isr、sap接受数据
-    }
-    else
-    {
+	if (protocol == ISR_REGIST)						// 根据协议字段分发消息处理函数
+	{
+		parse_04(meg);				//插入isr相关数据
+	}
+	else if (protocol == AP_REGIST)
+	{
+		parse_05(meg);				//注册or升级更新sap
+	}
+	else if (protocol == SAP_TRANS_DATA)
+	{
+		parse_06(meg);				//主要水质、空气分析 
+	}
+	else if (protocol == ISR_UPD_REGIST)
+	{
+		parse_22(meg);				//找到当前SIR设备和文件描述符fd(File descriptor)
+	}
+	else if (protocol == ISR_REPLY1)
+	{
+		parse_30();
+	}
+	else if (protocol == ISR_REPLY2)
+	{
+		parse_31();
+	}
+	else if (protocol == ISR_CHANGE)
+	{
+		parse_33(meg);				//测试isr、sap接受数据
+	}
+	else
+	{
 		cout << "The protocol is not used and the data sent is : " << meg << endl;
-    }
+	}
 }
 
 char* TrConnection::getTime()							//获取时间 //当地时间应该是本机电脑的时间
 {
-    time_t timep;																	// 声明一个 time_t 类型的变量，用于存储时间信息
-    time(&timep);																	// 获取当前时间，将其保存在 timep 变量中
-    strftime(tmp_time, sizeof(tmp_time), "%Y-%m-%d %H:%M:%S", localtime(&timep));	// 使用 strftime 函数将时间格式化为字符串，并将结果存储在 tmp_time 数组中
-    return tmp_time;
+	time_t timep;																	// 声明一个 time_t 类型的变量，用于存储时间信息
+	time(&timep);																	// 获取当前时间，将其保存在 timep 变量中
+	strftime(tmp_time, sizeof(tmp_time), "%Y-%m-%d %H:%M:%S", localtime(&timep));	// 使用 strftime 函数将时间格式化为字符串，并将结果存储在 tmp_time 数组中
+	return tmp_time;
 }
 
 int TrConnection::HextoDec(const char HexNum[])					//16进制转10进制
 {
-    int tempHex = 0, sumDec = 0;
-    int n = strlen(HexNum);
-    for (int i = 0; HexNum[i] != '\0'; i++)
-    {
-        switch (HexNum[i])
-        {
-        case 'A': tempHex = 10; break;
-        case 'B': tempHex = 11; break;
-        case 'C': tempHex = 12; break;
-        case 'D': tempHex = 13; break;
-        case 'E': tempHex = 14; break;
-        case 'F': tempHex = 15; break;
-        default: tempHex = HexNum[i] - '0';
-        }
-        sumDec += tempHex * pow(16, n - 1 - i);
-    }
-    return sumDec;
+	int tempHex = 0, sumDec = 0;
+	int n = strlen(HexNum);
+	for (int i = 0; HexNum[i] != '\0'; i++)
+	{
+		switch (HexNum[i])
+		{
+		case 'A': tempHex = 10; break;
+		case 'B': tempHex = 11; break;
+		case 'C': tempHex = 12; break;
+		case 'D': tempHex = 13; break;
+		case 'E': tempHex = 14; break;
+		case 'F': tempHex = 15; break;
+		default: tempHex = HexNum[i] - '0';
+		}
+		sumDec += tempHex * pow(16, n - 1 - i);
+	}
+	return sumDec;
 }
 
 string TrConnection::trans_time(string& obj)
@@ -160,12 +160,6 @@ void TrConnection::SAP_DATA_GET(const string& obj, int falg_lenth, const std::st
 	}
 	else {
 		sensor_temp = obj.substr(flag_start, falg_lenth);
-		//if(Rtd!= "CADMIUM_ION" && Rtd != "NH3N_WATER")
-		//	DATA = atof(sensor_temp.c_str());			//c_str()就是将C++的string转化为C的字符串数组//atof用于将字符串转换为浮点数
-		//else if(Rtd == "CADMIUM_ION")
-		//	DATA = atof(sensor_temp.c_str()) / 10000.0;
-		//else if (Rtd == "NH3N_WATER")
-		//	DATA = atof(sensor_temp.c_str()) / 10.0;
 		DATA = atof(sensor_temp.c_str());
 		if (DATA >= 999999.999)
 		{
@@ -519,8 +513,36 @@ void TrConnection::parse_water(const string& obj, struct SAP_DATA*& p)		//分析水
 	string sensor_temp;
 	cout << "<<<<Water quality data>>>>" << endl;
 
-	SAP_DATA_GET(obj, water_lenth, WATER_TEMPER, p -> WATER_TEMPER);	//水温
-	SAP_DATA_GET(obj, water_lenth, DISSOLVED_OX, p -> dissolved_ox);	//溶解氧
+	//SAP_DATA_GET(obj, water_lenth, WATER_TEMPER, p -> WATER_TEMPER);	//水温
+	int second_flag_start;
+
+	// 找到第一次出现的位置
+	flag_start = obj.find(WATER_TEMPER) + sensor_flag;  // 起始字段
+	if (flag_start < 11)  // 数据获取错误
+	{
+		p->WATER_TEMPER = -999.99;
+	}
+	else
+	{
+		// 从第一次出现位置的下一个字符开始，查找第二次出现的位置
+		second_flag_start = obj.find(WATER_TEMPER, flag_start + WATER_TEMPER.length()) + sensor_flag;
+		if (second_flag_start < 11)  // 第二次查找失败的情况
+		{
+			p->WATER_TEMPER = -999.99;
+		}
+		else
+		{
+			sensor_temp = obj.substr(second_flag_start, water_lenth);
+			p->WATER_TEMPER = atof(sensor_temp.c_str());
+			if (p->WATER_TEMPER >= 999999.999)
+			{
+				p->WATER_TEMPER = -999.99;
+			}
+		}
+	}
+	cout << "WATER_TEMPER:" << p->WATER_TEMPER;
+
+	SAP_DATA_GET(obj, water_lenth, DISSOLVED_OX, p->dissolved_ox);	//溶解氧
 	//SAP_DATA_GET(obj, water_lenth, NH3N_WATER, p -> nh3n);				//氨氮	
 	flag_start = obj.find(NH3N_WATER) + sensor_flag;
 	if (flag_start < 11)
@@ -532,7 +554,7 @@ void TrConnection::parse_water(const string& obj, struct SAP_DATA*& p)		//分析水
 		p->nh3n = atof(sensor_temp.c_str()) / 10.0;
 	}
 	cout << " nh3n:" << p->nh3n;
-	SAP_DATA_GET(obj, water_lenth, CUPRIC_ION, p -> cupric_ion);		//铜离子
+	SAP_DATA_GET(obj, water_lenth, CUPRIC_ION, p->cupric_ion);		//铜离子
 	//SAP_DATA_GET(obj, water_lenth, CADMIUM_ION, p -> cadmium_ion);		//镉离子
 	flag_start = obj.find(CADMIUM_ION) + sensor_flag;
 	if (flag_start < 11)
@@ -544,13 +566,13 @@ void TrConnection::parse_water(const string& obj, struct SAP_DATA*& p)		//分析水
 		p->cadmium_ion = atof(sensor_temp.c_str()) / 10000.0;
 	}
 	cout << " cadmium_ion:" << p->cadmium_ion;
-	SAP_DATA_GET(obj, water_lenth, BGPI_WATER, p -> bg_algae);			//蓝绿藻
-	SAP_DATA_GET(obj, water_lenth, PHYII_WATER, p -> ph);				//叶绿素
-	SAP_DATA_GET(obj, water_lenth, COND_WATER, p -> conductivity);		//电导率
+	SAP_DATA_GET(obj, water_lenth, BGPI_WATER, p->bg_algae);			//蓝绿藻
+	SAP_DATA_GET(obj, water_lenth, PHYII_WATER, p->ph);				//叶绿素
+	SAP_DATA_GET(obj, water_lenth, COND_WATER, p->conductivity);		//电导率
 	//SAP_DATA_GET(obj, water_lenth, COD, p -> cod);						//化学需氧量
 	//SAP_DATA_GET(obj, water_lenth, TURB_WATER, p->turbidity);			//浊度
-	SAP_DATA_GET(obj, water_lenth, COD, p -> turbidity);			//浊度(解析COD字段，解析的数值是浊度)
-	SAP_DATA_GET(obj, water_lenth, TOC_WATER, p -> toc);				//总有机碳
+	SAP_DATA_GET(obj, water_lenth, COD, p->turbidity);			//浊度(解析COD字段，解析的数值是浊度)
+	SAP_DATA_GET(obj, water_lenth, TOC_WATER, p->toc);				//总有机碳
 	//SAP_DATA_GET(obj, flag_start, sensor_temp, DEPTH_WATER, p -> depth_water);		//深度
 	//cout << endl;
 	flag_start = obj.find(DEPTH_WATER) + sensor_flag;					//深度
@@ -576,23 +598,23 @@ void TrConnection::parse_water(const string& obj, struct SAP_DATA*& p)		//分析水
 	//大气数据
 	cout << "<<<<Atmosphere data>>>>" << endl;
 
-	SAP_DATA_GET(obj, gas_lenth, CO2_SENSOR, p -> co2);				//二氧化碳
-	SAP_DATA_GET(obj, gas_lenth, PM10_SENSOR, p -> pm10);	//PM010
-	SAP_DATA_GET(obj, gas_lenth, PM25_SENSOR, p -> pmD4);				//PM2.5	
-	SAP_DATA_GET(obj, gas_lenth, PM1_SENSOR, p -> pm1);		//PM1
+	SAP_DATA_GET(obj, gas_lenth, CO2_SENSOR, p->co2);				//二氧化碳
+	SAP_DATA_GET(obj, gas_lenth, PM10_SENSOR, p->pm10);	//PM010
+	SAP_DATA_GET(obj, gas_lenth, PM25_SENSOR, p->pmD4);				//PM2.5	
+	SAP_DATA_GET(obj, gas_lenth, PM1_SENSOR, p->pm1);		//PM1
 	cout << endl;
 
 	//气象数据
 	cout << "<<<<Meteorological data>>>>" << endl;
 
-	SAP_DATA_GET(obj, gas_lenth, WIND_DIR, p -> wind_direction);			//风向
-	SAP_DATA_GET(obj, gas_lenth, WIND_SPE, p -> wind_speed);				//风速
-	SAP_DATA_GET(obj, gas_lenth, RAIN_FALL, p -> rain_fall);				//雨量	
-	SAP_DATA_GET(obj, gas_lenth, ILUM, p -> luminous);					//光照
-	SAP_DATA_GET(obj, gas_lenth, TEMPER_SENSOR, p -> temper);				//气温
-	SAP_DATA_GET(obj, gas_lenth, HUMID_SENSOR, p -> hum);					//湿度
-	SAP_DATA_GET(obj, gas_lenth, AIR_PRES, p -> air_press);				//气压
-	SAP_DATA_GET(obj, gas_lenth, WIND_SPE10M, p -> wind_speed_10m);		//噪声
+	SAP_DATA_GET(obj, gas_lenth, WIND_DIR, p->wind_direction);			//风向
+	SAP_DATA_GET(obj, gas_lenth, WIND_SPE, p->wind_speed);				//风速
+	SAP_DATA_GET(obj, gas_lenth, RAIN_FALL, p->rain_fall);				//雨量	
+	SAP_DATA_GET(obj, gas_lenth, ILUM, p->luminous);					//光照
+	SAP_DATA_GET(obj, gas_lenth, TEMPER_SENSOR, p->temper);				//气温
+	SAP_DATA_GET(obj, gas_lenth, HUMID_SENSOR, p->hum);					//湿度
+	SAP_DATA_GET(obj, gas_lenth, AIR_PRES, p->air_press);				//气压
+	SAP_DATA_GET(obj, gas_lenth, WIND_SPE10M, p->wind_speed_10m);		//噪声
 	cout << endl;
 
 	Equipment_DATA_GET(obj, p);
@@ -736,27 +758,27 @@ void TrConnection::parse_6001_ship(const string& obj, struct SAP_DATA*& p)
 void TrConnection::parse_04(const string& meg)				//04包解析
 {
 	cout << meg << endl;
-    cout << "<<<<04 Packet Analysis>>>>" << endl;														//04包分析
-    int packetsize = meg.size();																		//获取04包的长度
-    if (48 <=packetsize && packetsize<=70)																//如果04包长度大于48且小于70
-    {
+	cout << "<<<<04 Packet Analysis>>>>" << endl;														//04包分析
+	int packetsize = meg.size();																		//获取04包的长度
+	if (48 <= packetsize && packetsize <= 70)																//如果04包长度大于48且小于70
+	{
 		int IsrIp_len = 0;
 		isr_mess* isr_mess_reg = new isr_mess;
-        IsrIp_len = meg.size() - IsrIp_st - 1;															//04包长-48
-        strcpy(isr_mess_reg->isr_net_id, (meg.substr(netid_st, netid_len)).c_str());					// 从输入字符串 meg 中提取特定字段，并使用 strcpy 复制到 isr_mess_reg 的成员中
-        strcpy(isr_mess_reg->isr_data_len, (meg.substr(datalen_st, datalen_len)).c_str());
-        strcpy(isr_mess_reg->isr_mac, (meg.substr(IsrMac_st, IsrMac_len)).c_str());
-        strcpy(isr_mess_reg->isr_id, (meg.substr(IsrId_st, IsrId_len)).c_str());
-        strcpy(isr_mess_reg->isr_gps, (meg.substr(IsrGps_st, IsrGps_len)).c_str());
-        strcpy(isr_mess_reg->isr_cpu, (meg.substr(IsrCpu_st, IsrCpu_len)).c_str());
-        strcpy(isr_mess_reg->isr_ram, (meg.substr(IsrRam_st, IsrRam_len)).c_str());
-        strcpy(isr_mess_reg->isr_ip, (meg.substr(IsrIp_st, IsrIp_len)).c_str());
-        strcpy(isr_mess_reg->isr_reg_time, getTime());
+		IsrIp_len = meg.size() - IsrIp_st - 1;															//04包长-48
+		strcpy(isr_mess_reg->isr_net_id, (meg.substr(netid_st, netid_len)).c_str());					// 从输入字符串 meg 中提取特定字段，并使用 strcpy 复制到 isr_mess_reg 的成员中
+		strcpy(isr_mess_reg->isr_data_len, (meg.substr(datalen_st, datalen_len)).c_str());
+		strcpy(isr_mess_reg->isr_mac, (meg.substr(IsrMac_st, IsrMac_len)).c_str());
+		strcpy(isr_mess_reg->isr_id, (meg.substr(IsrId_st, IsrId_len)).c_str());
+		strcpy(isr_mess_reg->isr_gps, (meg.substr(IsrGps_st, IsrGps_len)).c_str());
+		strcpy(isr_mess_reg->isr_cpu, (meg.substr(IsrCpu_st, IsrCpu_len)).c_str());
+		strcpy(isr_mess_reg->isr_ram, (meg.substr(IsrRam_st, IsrRam_len)).c_str());
+		strcpy(isr_mess_reg->isr_ip, (meg.substr(IsrIp_st, IsrIp_len)).c_str());
+		strcpy(isr_mess_reg->isr_reg_time, getTime());
 
-        cout << "isr_id:" << isr_mess_reg->isr_id << " isr_net_id:" << isr_mess_reg->isr_net_id << " isr_data_len: " << isr_mess_reg->isr_data_len << " isr_mac:" << isr_mess_reg->isr_mac << " isr_gps: " << isr_mess_reg->isr_gps << " isr_cpu: " << isr_mess_reg->isr_cpu << " isr_ram: " << isr_mess_reg->isr_ram << " isr_ip: " << isr_mess_reg->isr_ip << " isr_reg_time: " << isr_mess_reg->isr_reg_time << endl;
-		
+		cout << "isr_id:" << isr_mess_reg->isr_id << " isr_net_id:" << isr_mess_reg->isr_net_id << " isr_data_len: " << isr_mess_reg->isr_data_len << " isr_mac:" << isr_mess_reg->isr_mac << " isr_gps: " << isr_mess_reg->isr_gps << " isr_cpu: " << isr_mess_reg->isr_cpu << " isr_ram: " << isr_mess_reg->isr_ram << " isr_ip: " << isr_mess_reg->isr_ip << " isr_reg_time: " << isr_mess_reg->isr_reg_time << endl;
+
 		//匹配套接字以及isr_mac
-		device_match[isr_mess_reg->isr_mac]= clientfd_cur;											//将当前的客户端的文件描述符与isr_mac地址绑定
+		device_match[isr_mess_reg->isr_mac] = clientfd_cur;											//将当前的客户端的文件描述符与isr_mac地址绑定
 		cout << "current equipment: " << isr_mess_reg->isr_mac << " fd: " << clientfd_cur << endl;
 		for (auto b : device_match) {									//遍历所有的键值对，（当遍历完所有键值对，空的值为0，for循环停止遍历）
 			cout << b.first << " " << b.second << endl;					//it->first来访问键，使用it->second访问值
@@ -774,18 +796,18 @@ void TrConnection::parse_04(const string& meg)				//04包解析
 			cout << "Reply 10 message failed!!" << endl;
 		}
 		else {
-			cout << "Reply 10 message successfully!!" << endl; 
+			cout << "Reply 10 message successfully!!" << endl;
 		}
 	}
-    else																//如果包长不是大于48且小于70，则该包不是04包
-    {
-        cout << "<<<<IT IS not 04 Packet Access>>>> " << endl;
-    }
+	else																//如果包长不是大于48且小于70，则该包不是04包
+	{
+		cout << "<<<<IT IS not 04 Packet Access>>>> " << endl;
+	}
 }
 
 void TrConnection::parse_05(const string& meg)							//05包解析
 {
-    cout << "<<<<05 Packet Analysis>>>>" << endl;
+	cout << "<<<<05 Packet Analysis>>>>" << endl;
 	int packetsize = meg.size();										//获取05包的长度
 	if (packetsize == 71)												//05包为固定长度
 	{
@@ -822,23 +844,23 @@ void TrConnection::parse_05(const string& meg)							//05包解析
 
 void TrConnection::parse_06(const string& meg)											//06包
 {
-    cout << "<<<<06 Packet Analysis>>>> " << endl;
+	cout << "<<<<06 Packet Analysis>>>> " << endl;
 	SAP_DATA* sap_data = new SAP_DATA;
 
-    //私有头解析
-    strcpy(sap_data->air_isr_mac, (meg.substr(IsrMac_06_st, IsrMac_06_len)).c_str());			
-    strcpy(sap_data->air_data_len, (meg.substr(datalen_st, datalen_len)).c_str());				
-    strcpy(sap_data->air_isr_id, (meg.substr(IsrId_06_st, IsrId_06_len)).c_str());				
-    strcpy(sap_data->air_sap_mac, (meg.substr(SapMac_06_st, SapMac_06_len)).c_str());			
-    strcpy(sap_data->air_sap_id, (meg.substr(SapId_06_st, SapId_06_len)).c_str());				
-    strcpy(sap_data->air_com_port, (meg.substr(SapPort_06_st, SapPort_06_len)).c_str());		
-    strcpy(sap_data->air_net_id, (meg.substr(netid_st, netid_len)).c_str());					
-    strcpy(sap_data->air_com_type, (meg.substr(SapComtype_06_st, SapComtype_06_len)).c_str());	
-    strcpy(sap_data->sap_cpu_rate, (meg.substr(SapCpu_06_st, SapCpu_06_len)).c_str());			
-    strcpy(sap_data->sap_ram_rate, (meg.substr(SapRam_06_st, SapRam_06_len)).c_str());	
+	//私有头解析
+	strcpy(sap_data->air_isr_mac, (meg.substr(IsrMac_06_st, IsrMac_06_len)).c_str());
+	strcpy(sap_data->air_data_len, (meg.substr(datalen_st, datalen_len)).c_str());
+	strcpy(sap_data->air_isr_id, (meg.substr(IsrId_06_st, IsrId_06_len)).c_str());
+	strcpy(sap_data->air_sap_mac, (meg.substr(SapMac_06_st, SapMac_06_len)).c_str());
+	strcpy(sap_data->air_sap_id, (meg.substr(SapId_06_st, SapId_06_len)).c_str());
+	strcpy(sap_data->air_com_port, (meg.substr(SapPort_06_st, SapPort_06_len)).c_str());
+	strcpy(sap_data->air_net_id, (meg.substr(netid_st, netid_len)).c_str());
+	strcpy(sap_data->air_com_type, (meg.substr(SapComtype_06_st, SapComtype_06_len)).c_str());
+	strcpy(sap_data->sap_cpu_rate, (meg.substr(SapCpu_06_st, SapCpu_06_len)).c_str());
+	strcpy(sap_data->sap_ram_rate, (meg.substr(SapRam_06_st, SapRam_06_len)).c_str());
 
-    cout << "air_isr_mac: " << sap_data->air_isr_mac << " air_isr_id:" << sap_data->air_isr_id << " air_sap_mac:" << sap_data->air_sap_mac << " air_sap_id:" << sap_data->air_sap_id << endl;
-    cout << "<<message length>>: " << meg.length() << "<<Data area length>>: " << HextoDec(sap_data->air_data_len) << "(Dec) " << sap_data->air_data_len << "(Hex)" << endl;
+	cout << "air_isr_mac: " << sap_data->air_isr_mac << " air_isr_id:" << sap_data->air_isr_id << " air_sap_mac:" << sap_data->air_sap_mac << " air_sap_id:" << sap_data->air_sap_id << endl;
+	cout << "<<message length>>: " << meg.length() << "<<Data area length>>: " << HextoDec(sap_data->air_data_len) << "(Dec) " << sap_data->air_data_len << "(Hex)" << endl;
 
 	//匹配
 	device_match[sap_data->air_isr_mac] = clientfd_cur;
@@ -847,23 +869,23 @@ void TrConnection::parse_06(const string& meg)											//06包
 		cout << a.first << " " << a.second << endl;
 	}
 
-    //数据出错
-    if (meg.length() < HextoDec(sap_data->air_data_len) + 17)                                 //？？+17   11(hex)
-    {
-        cout << "Failed, the current packet is wrong..." << endl;
-        delete sap_data;
-        return;
-    }
+	//数据出错
+	if (meg.length() < HextoDec(sap_data->air_data_len) + 17)                                 //？？+17   11(hex)
+	{
+		cout << "Failed, the current packet is wrong..." << endl;
+		delete sap_data;
+		return;
+	}
 
-    //截取数据段
-    int flag = -1;
-    flag = meg.find("#");
-    //解析数据段
-    if ((meg.length() > HjGass_06_st) && (flag >= 0))
-    {
-        int ender = meg.find("@") - flag;//HJ212数据包的长度
-        string temper_meg = meg.substr(flag, ender);
-        cout << "HJ212: " << temper_meg << endl;
+	//截取数据段
+	int flag = -1;
+	flag = meg.find("#");
+	//解析数据段
+	if ((meg.length() > HjGass_06_st) && (flag >= 0))
+	{
+		int ender = meg.find("@") - flag;//HJ212数据包的长度
+		string temper_meg = meg.substr(flag, ender);
+		cout << "HJ212: " << temper_meg << endl;
 
 		//if (strcmp(sap_data->air_isr_id, "15") == 0)
 		//{
@@ -876,29 +898,29 @@ void TrConnection::parse_06(const string& meg)											//06包
 		//	strcpy(sap_data->gas_data, temper_meg.c_str());//南山空气数据包
 		//}
 
-        //此处由两个解析函数组成（后续可以考虑融合为一个）：分别对应逸夫楼顶设备、云阳中云趸大船设备
-        //int iswater = temper_meg.find(WATER_TEMPER);		//通过看传过来的数据里面有没有WATER_TEMPER和SO2_SENSOR进行区分
-        //int isair = temper_meg.find(SO2_SENSOR);
+		//此处由两个解析函数组成（后续可以考虑融合为一个）：分别对应逸夫楼顶设备、云阳中云趸大船设备
+		//int iswater = temper_meg.find(WATER_TEMPER);		//通过看传过来的数据里面有没有WATER_TEMPER和SO2_SENSOR进行区分
+		//int isair = temper_meg.find(SO2_SENSOR);
 
-        //if (iswater != -1)
-        //{
-        //    parse_water(temper_meg, sap_data);
-        //    strcpy(sap_data->ship_data, temper_meg.c_str());//水质数据包
-        //}
-        //else if (isair != -1)//南山空气数据
-        //{
-        //    parse_air(temper_meg, sap_data);
-        //    strcpy(sap_data->gas_data, temper_meg.c_str());//南山空气数据包
-        //}
+		//if (iswater != -1)
+		//{
+		//    parse_water(temper_meg, sap_data);
+		//    strcpy(sap_data->ship_data, temper_meg.c_str());//水质数据包
+		//}
+		//else if (isair != -1)//南山空气数据
+		//{
+		//    parse_air(temper_meg, sap_data);
+		//    strcpy(sap_data->gas_data, temper_meg.c_str());//南山空气数据包
+		//}
 		parse_DATA(temper_meg, sap_data);
-    }
-    else
-    {
-        //包不正常,后续可以考虑返回不正常包的信息
-        cout << "Data packets of type 06 have no data information, Failed!" << endl;
-        delete sap_data;
-        return;
-    }
+	}
+	else
+	{
+		//包不正常,后续可以考虑返回不正常包的信息
+		cout << "Data packets of type 06 have no data information, Failed!" << endl;
+		delete sap_data;
+		return;
+	}
 
 	cout << "<<transfer time>>: " << sap_data->air_real_time << endl;
 	sap_data->year[0] = sap_data->air_real_time[2];
@@ -916,13 +938,15 @@ void TrConnection::parse_06(const string& meg)											//06包
 void TrConnection::parse_22(const string& meg)
 {
 	cout << "<<<<Online>>>> " << endl;
-
+	Timer::TimerId time_id;
 	string air_isr_mac1 = meg.substr(3, 16).c_str();
 	device_match[air_isr_mac1] = clientfd_cur;
 	cout << "current equipment: " << air_isr_mac1 << " fd: " << clientfd_cur << endl;
 	for (auto a : device_match) {
 		cout << a.first << " " << a.second << endl;
 	}
+	time_id = mEnv->scheduler()->resetTimerEvent(mtimeid, 15 * 60 * 1000);
+	cout << "reset outtime and timeid: " << time_id << endl;
 }
 
 void TrConnection::parse_30()

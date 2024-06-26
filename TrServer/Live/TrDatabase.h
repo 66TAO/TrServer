@@ -14,7 +14,7 @@
 #define MYSQL_NAME "ship_db"      		   // 数据库名称(阿里云服务器)
 //#define MYSQL_NAME "Ship_DB"      		   // 数据库名称(本地服务器)
 
-class TrDatabase 
+class TrDatabase
 {
 public:
 	static TrDatabase* createNew();
@@ -41,7 +41,7 @@ private:
 	std::string temp_sql;
 	MYSQL db_g2020;
 	MYSQL* connection;
-	MYSQL_RES* res; 	
+	MYSQL_RES* res;
 	MYSQL_ROW row;
 
 };

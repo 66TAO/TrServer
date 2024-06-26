@@ -1,9 +1,10 @@
 #include "TcpConnection.h"
 #include "../Scheduler/SocketsOps.h"
 #include "../Base/Log.h"
+#include "../Scheduler/EventScheduler.h"
 
 
-TcpConnection::TcpConnection(UsageEnvironment* env, int clientFd) :                 
+TcpConnection::TcpConnection(UsageEnvironment* env, int clientFd) :
     mEnv(env),
     mClientFd(clientFd)
 {
@@ -12,6 +13,12 @@ TcpConnection::TcpConnection(UsageEnvironment* env, int clientFd) :
     mClientIOEvent->setWriteCallback(writeCallback);
     mClientIOEvent->setErrorCallback(errorCallback);
     mClientIOEvent->enableReadHandling(); //默认只开启读
+
+    mClienttimeEvent = TimerEvent::createNew(this);
+    mClienttimeEvent->setTimeoutCallback(timeOutdisconnectCallback);
+    //mClienttimeEvent->start();
+    mtimeid = mEnv->scheduler()->addTimerEventRunEvery(mClienttimeEvent, 15 * 60 * 1000);//发送22包的定时间隔为10分钟10 * 60 * 1000
+
 
     //    mClientIOEvent->enableWriteHandling();
     //    mClientIOEvent->enableErrorHandling();
@@ -23,8 +30,9 @@ TcpConnection::~TcpConnection()
 {
     mEnv->scheduler()->removeIOEvent(mClientIOEvent);                   // 从调度器中移除客户端 IOEvent
     delete mClientIOEvent;                                              // 删除客户端 IOEvent 对象
+    delete mClienttimeEvent;
     //    Delete::release(mClientIOEvent);
-            
+
     sockets::close(mClientFd);                                          // 关闭客户端文件描述符
 }
 
@@ -142,5 +150,12 @@ void TcpConnection::errorCallback(void* arg)
 {
     TcpConnection* tcpConnection = (TcpConnection*)arg;
     tcpConnection->handleError();
+}
+
+void TcpConnection::timeOutdisconnectCallback(void* arg) {
+    TcpConnection* timeOutdisconnect = (TcpConnection*)arg;
+    cout << "time out will close the fd:" << timeOutdisconnect->mClientFd << endl;
+    //cout << "time out will close the timefd:" << timeOutdisconnect->mtimeid << endl;
+    timeOutdisconnect->handleDisConnect();
 }
 

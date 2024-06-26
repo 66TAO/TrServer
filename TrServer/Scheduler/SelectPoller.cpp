@@ -120,7 +120,7 @@ void SelectPoller::handleEvent() {                                          // ´
         if (FD_ISSET(it->first, &readSet))                              // ¼ì²é¶ÁÊÂ¼þÊÇ·ñ·¢Éú
             rEvent |= IOEvent::EVENT_READ;
 
-        if (FD_ISSET(it->first, &writeSet))                             
+        if (FD_ISSET(it->first, &writeSet))
             rEvent |= IOEvent::EVENT_WRITE;
 
         if (FD_ISSET(it->first, &exceptionSet))

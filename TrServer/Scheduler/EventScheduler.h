@@ -5,6 +5,7 @@
 #include <mutex>
 #include <stdint.h>
 #include "Event.h"
+#include"Timer.h"
 class Poller;
 
 class EventScheduler
@@ -30,6 +31,9 @@ public:
     //    void wakeup();
     Poller* poller();
 
+    Timer::TimerId addTimerEventRunEvery(TimerEvent* event, Timer::TimeInterval interval);
+    Timer::TimerId resetTimerEvent(Timer::TimerId mtimeid, Timer::TimeInterval interval);
+
 private:
     void handleTriggerEvents();
 
@@ -37,5 +41,6 @@ private:
     bool mQuit;
     Poller* mPoller;
     std::vector<TriggerEvent*> mTriggerEvents;
+    TimerManager* mTimerManager;
 };
 

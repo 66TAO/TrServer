@@ -38,28 +38,29 @@
     <ClInclude Include="Base\Log.h" />
     <ClInclude Include="Live\Buffer.h" />
     <ClInclude Include="Live\InetAddress.h" />
+    <ClInclude Include="Live\mail.h" />
     <ClInclude Include="Live\MegParse.h" />
     <ClInclude Include="Live\TcpConnection.h" />
     <ClInclude Include="Live\TrConnection.h" />
     <ClInclude Include="Live\TrDatabase.h" />
     <ClInclude Include="Live\TrServer.h" />
-    <ClInclude Include="mail.h" />
     <ClInclude Include="Scheduler\EPollPoller.h" />
     <ClInclude Include="Scheduler\Event.h" />
     <ClInclude Include="Scheduler\EventScheduler.h" />
     <ClInclude Include="Scheduler\Poller.h" />
     <ClInclude Include="Scheduler\SelectPoller.h" />
     <ClInclude Include="Scheduler\SocketsOps.h" />
+    <ClInclude Include="Scheduler\Timer.h" />
     <ClInclude Include="Scheduler\UsageEnvironment.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Live\Buffer.cpp" />
     <ClCompile Include="Live\InetAddress.cpp" />
+    <ClCompile Include="Live\mail.cpp" />
     <ClCompile Include="Live\TcpConnection.cpp" />
     <ClCompile Include="Live\TrConnection.cpp" />
     <ClCompile Include="Live\TrDatabase.cpp" />
     <ClCompile Include="Live\TrServer.cpp" />
-    <ClCompile Include="mail.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Scheduler\EPollPoller.cpp" />
     <ClCompile Include="Scheduler\Event.cpp" />
@@ -67,6 +68,7 @@
     <ClCompile Include="Scheduler\Poller.cpp" />
     <ClCompile Include="Scheduler\SelectPoller.cpp" />
     <ClCompile Include="Scheduler\SocketsOps.cpp" />
+    <ClCompile Include="Scheduler\Timer.cpp" />
     <ClCompile Include="Scheduler\UsageEnvironment.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

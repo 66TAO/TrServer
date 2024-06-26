@@ -4,117 +4,117 @@
 
 TrDatabase* TrDatabase::createNew()
 {
-    return new TrDatabase();
+	return new TrDatabase();
 }
 
 TrDatabase::TrDatabase()
 {
-    LOGI("TrDatabase");
+	LOGI("TrDatabase");
 }
 
 //TrDatabase::~TrDatabase() {};
 
 bool TrDatabase::init_db()																			// 初始化数据库连接
 {
-    mysql_init(&db_g2020);
-    if (!(mysql_real_connect(&db_g2020, MYSQL_IP, MYSQL_USER, MYSQL_PWD, MYSQL_NAME, 0, NULL, 0)))		// 尝试连接到数据库
-    {
-        printf("Error connecting to database:%s\n", mysql_error(&db_g2020));
-        return false;
-    }
-    else
-    {
-        printf("Database connected...\n");
-        memset(st_query, 0, sizeof(st_query));										// 检查是否存在 isr_total 表
-        strcpy(st_query, "select * from isr_total;");
-        state = mysql_query(&db_g2020, st_query);				//向与指定的连接标识符关联的服务器中的当前活动数据库发送一条查询
-        if (0 == state)																// 查询成功，说明 isr_total 表存在，打印提示信息，释放查询结果并返回 true
-        {
-            printf("isr_total is in Ship_DB!!\n");
-            res = mysql_use_result(&db_g2020);						//获取查询的结果集
-            mysql_free_result(res);									//释放查询的结果集
-            return true;
-        }
-        else
-        {
-            printf("isr_total does not exist：%s\n", mysql_error(&db_g2020));		// 查询失败，说明 isr_total 表不存在，打印错误信息并返回 false
-            return false;
-        }
-    }
+	mysql_init(&db_g2020);
+	if (!(mysql_real_connect(&db_g2020, MYSQL_IP, MYSQL_USER, MYSQL_PWD, MYSQL_NAME, 0, NULL, 0)))		// 尝试连接到数据库
+	{
+		printf("Error connecting to database:%s\n", mysql_error(&db_g2020));
+		return false;
+	}
+	else
+	{
+		printf("Database connected...\n");
+		memset(st_query, 0, sizeof(st_query));										// 检查是否存在 isr_total 表
+		strcpy(st_query, "select * from isr_total;");
+		state = mysql_query(&db_g2020, st_query);				//向与指定的连接标识符关联的服务器中的当前活动数据库发送一条查询
+		if (0 == state)																// 查询成功，说明 isr_total 表存在，打印提示信息，释放查询结果并返回 true
+		{
+			printf("isr_total is in Ship_DB!!\n");
+			res = mysql_use_result(&db_g2020);						//获取查询的结果集
+			mysql_free_result(res);									//释放查询的结果集
+			return true;
+		}
+		else
+		{
+			printf("isr_total does not exist：%s\n", mysql_error(&db_g2020));		// 查询失败，说明 isr_total 表不存在，打印错误信息并返回 false
+			return false;
+		}
+	}
 }
 
 void TrDatabase::insert_total(struct isr_mess*& p)							// 插入 isr_total 表记录
 {
-    memset(st_query, 0, sizeof(st_query));										// 清空查询缓存
+	memset(st_query, 0, sizeof(st_query));										// 清空查询缓存
 	// 构造 SQL 查询语句，使用 sprintf 将变量值填充到查询字符串中
-    sprintf((char*)st_query, "INSERT INTO isr_total(isr_id,net_id,isr_ip,isr_mac,isr_gps,isr_regist_time,isr_com_time,isr_cpu_rate,isr_ram_rate) VALUE(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');", p->isr_id, p->isr_net_id, p->isr_ip, p->isr_mac, p->isr_id, p->isr_reg_time, p->isr_reg_time, p->isr_cpu, p->isr_ram);						//向名为 isr_total 的表中插入 ISR 的各种信息// 构造插入 isr_total 表记录的 SQL 语句
-    temp_sql = st_query;
-    //LOGI("SQL: %s", temp_sql);
-    std::cout << "SQL:" << temp_sql << std::endl;
-    state = mysql_query(&db_g2020, st_query);
-    if (0 == state)
-    {
-        memset(st_query, 0, sizeof(st_query));									// 插入成功，创建对应的 isr_00xx 表
-        sprintf((char*)st_query, "CREATE TABLE isr_00%s(sap_id char(2) NOT NULL,sap_reg_ym char(4) NOT NULL,sap_mac char(16) NULL,sap_isr_id char(2) NULL,sap_isr_mac char(16) NULL,net_id char(4) NULL,sap_gps char(11) NULL,sap_register_time varchar(24) NULL,sap_com_time varchar(24) NULL,com_type char(4) NULL,port_type char(3) NULL,sap_cpu_rate char(2) NULL,sap_ram_rate char(2) NULL,PRIMARY KEY(sap_id,sap_reg_ym)) ENGINE=InnoDB;", p->isr_id);//建表：isr_00（p->isr_id）// 构造创建 isr_00xx 表的 SQL 语句
+	sprintf((char*)st_query, "INSERT INTO isr_total(isr_id,net_id,isr_ip,isr_mac,isr_gps,isr_regist_time,isr_com_time,isr_cpu_rate,isr_ram_rate) VALUE(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');", p->isr_id, p->isr_net_id, p->isr_ip, p->isr_mac, p->isr_id, p->isr_reg_time, p->isr_reg_time, p->isr_cpu, p->isr_ram);						//向名为 isr_total 的表中插入 ISR 的各种信息// 构造插入 isr_total 表记录的 SQL 语句
+	temp_sql = st_query;
+	//LOGI("SQL: %s", temp_sql);
+	std::cout << "SQL:" << temp_sql << std::endl;
+	state = mysql_query(&db_g2020, st_query);
+	if (0 == state)
+	{
+		memset(st_query, 0, sizeof(st_query));									// 插入成功，创建对应的 isr_00xx 表
+		sprintf((char*)st_query, "CREATE TABLE isr_00%s(sap_id char(2) NOT NULL,sap_reg_ym char(4) NOT NULL,sap_mac char(16) NULL,sap_isr_id char(2) NULL,sap_isr_mac char(16) NULL,net_id char(4) NULL,sap_gps char(11) NULL,sap_register_time varchar(24) NULL,sap_com_time varchar(24) NULL,com_type char(4) NULL,port_type char(3) NULL,sap_cpu_rate char(2) NULL,sap_ram_rate char(2) NULL,PRIMARY KEY(sap_id,sap_reg_ym)) ENGINE=InnoDB;", p->isr_id);//建表：isr_00（p->isr_id）// 构造创建 isr_00xx 表的 SQL 语句
 
-        temp_sql = st_query;
-        std::cout << "SQL:" << temp_sql << std::endl;
-        state = mysql_query(&db_g2020, st_query);
+		temp_sql = st_query;
+		std::cout << "SQL:" << temp_sql << std::endl;
+		state = mysql_query(&db_g2020, st_query);
 
-        if (0 == state)
-        {
-            std::cout << "Insert isr_total and creat isr_00" << p->isr_id << " Success!!" << std::endl;				// 创建表成功
-        }
-        else
-        {
-            std::cout << "Create table isr_00" << p->isr_id << " failed:" << mysql_error(&db_g2020) << std::endl;		// 创建表失败，打印错误信息
-        }
-    }
-    else
-    {
-        std::cout << "Insert isr_total failed:" << mysql_error(&db_g2020) << std::endl;						// 插入失败，打印错误信息
-    }
+		if (0 == state)
+		{
+			std::cout << "Insert isr_total and creat isr_00" << p->isr_id << " Success!!" << std::endl;				// 创建表成功
+		}
+		else
+		{
+			std::cout << "Create table isr_00" << p->isr_id << " failed:" << mysql_error(&db_g2020) << std::endl;		// 创建表失败，打印错误信息
+		}
+	}
+	else
+	{
+		std::cout << "Insert isr_total failed:" << mysql_error(&db_g2020) << std::endl;						// 插入失败，打印错误信息
+	}
 }
 
 void TrDatabase::update_total(struct isr_mess*& p)					//更新表中数据	
 {
-    res = mysql_use_result(&db_g2020);									// 使用 mysql_use_result() 函数获取查询结果
-    mysql_free_result(res);												// 释放查询结果集内存，以免造成内存泄漏
-    memset(st_query, 0, sizeof(st_query));								// 清空查询缓存
+	res = mysql_use_result(&db_g2020);									// 使用 mysql_use_result() 函数获取查询结果
+	mysql_free_result(res);												// 释放查询结果集内存，以免造成内存泄漏
+	memset(st_query, 0, sizeof(st_query));								// 清空查询缓存
 
 
-    sprintf((char*)st_query, "UPDATE isr_total SET net_id = \'%s\',isr_ip= \'%s\',isr_gps= \'%s\',isr_regist_time= \'%s\',isr_com_time= \'%s\',isr_cpu_rate= \'%s\',isr_ram_rate= \'%s\' WHERE isr_id = \'%s\';", \
-        p->isr_net_id, p->isr_ip, p->isr_gps, p->isr_reg_time, p->isr_reg_time, p->isr_cpu, p->isr_ram, p->isr_id);			// 构造 SQL 查询语句，使用 UPDATE 关键字更新表中的数据（两个isr_reg_time？？）
+	sprintf((char*)st_query, "UPDATE isr_total SET net_id = \'%s\',isr_ip= \'%s\',isr_gps= \'%s\',isr_regist_time= \'%s\',isr_com_time= \'%s\',isr_cpu_rate= \'%s\',isr_ram_rate= \'%s\' WHERE isr_id = \'%s\';", \
+		p->isr_net_id, p->isr_ip, p->isr_gps, p->isr_reg_time, p->isr_reg_time, p->isr_cpu, p->isr_ram, p->isr_id);			// 构造 SQL 查询语句，使用 UPDATE 关键字更新表中的数据（两个isr_reg_time？？）
 
-    state = mysql_query(&db_g2020, st_query);							// 执行 SQL 查询
-    temp_sql = st_query;
-    std::cout << "SQL:" << temp_sql << std::endl;
+	state = mysql_query(&db_g2020, st_query);							// 执行 SQL 查询
+	temp_sql = st_query;
+	std::cout << "SQL:" << temp_sql << std::endl;
 
-    if (0 == state)														// 检查查询状态
-    {
-        std::cout << "Update isr_total Success!!" << std::endl;			// 输出成功消息
-        res = mysql_use_result(&db_g2020);								// 获取查询结果
-        mysql_free_result(res);											// 释放查询结果内存
-    }
-    else
-    {
-        std::cout << "update_total failed:" << mysql_error(&db_g2020) << std::endl;
-    }
+	if (0 == state)														// 检查查询状态
+	{
+		std::cout << "Update isr_total Success!!" << std::endl;			// 输出成功消息
+		res = mysql_use_result(&db_g2020);								// 获取查询结果
+		mysql_free_result(res);											// 释放查询结果内存
+	}
+	else
+	{
+		std::cout << "update_total failed:" << mysql_error(&db_g2020) << std::endl;
+	}
 }
 
 void TrDatabase::insert_isr(struct sap_mess*& p)								//插入isr_00%s和创建sap_%s%s_%s表
 {
-    memset(st_query, 0, sizeof(st_query));																	// 清空查询缓存
-    sprintf((char*)st_query, "INSERT INTO isr_00%s(sap_id,sap_reg_ym,sap_mac,sap_isr_id,sap_isr_mac,net_id,sap_gps,sap_register_time,sap_com_time,com_type,port_type,sap_cpu_rate,sap_ram_rate) \
+	memset(st_query, 0, sizeof(st_query));																	// 清空查询缓存
+	sprintf((char*)st_query, "INSERT INTO isr_00%s(sap_id,sap_reg_ym,sap_mac,sap_isr_id,sap_isr_mac,net_id,sap_gps,sap_register_time,sap_com_time,com_type,port_type,sap_cpu_rate,sap_ram_rate) \
     	VALUE(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');", \
-        p->sap_isr_id, p->sap_id, p->year_mon, p->sap_mac, p->sap_isr_id, p->sap_isr_mac, p->sap_net_id, p->sap_net_id, p->sap_reg_time, p->sap_reg_time, p->sap_com_type, p->sap_port, p->sap_cpu, p->sap_ram);
-    state = mysql_query(&db_g2020, st_query);								// 执行 SQL 查询
+		p->sap_isr_id, p->sap_id, p->year_mon, p->sap_mac, p->sap_isr_id, p->sap_isr_mac, p->sap_net_id, p->sap_net_id, p->sap_reg_time, p->sap_reg_time, p->sap_com_type, p->sap_port, p->sap_cpu, p->sap_ram);
+	state = mysql_query(&db_g2020, st_query);								// 执行 SQL 查询
 
-    if (0 == state)
-    {
-        //创建表sap000x
-        memset(st_query, 0, sizeof(st_query));
-        sprintf((char*)st_query, "CREATE TABLE sap_%s%s_%s(sap_index INT NOT NULL AUTO_INCREMENT,air_mac char(27) NULL,air_id char(2) NULL,air_sap_id char(2) NULL,air_sap_mac char(16) NULL,air_isr_id char(2) NULL,air_isr_mac char(16) NULL,\
+	if (0 == state)
+	{
+		//创建表sap000x
+		memset(st_query, 0, sizeof(st_query));
+		sprintf((char*)st_query, "CREATE TABLE sap_%s%s_%s(sap_index INT NOT NULL AUTO_INCREMENT,air_mac char(27) NULL,air_id char(2) NULL,air_sap_id char(2) NULL,air_sap_mac char(16) NULL,air_isr_id char(2) NULL,air_isr_mac char(16) NULL,\
 			air_net_id char(4) NULL,air_com_type char(4) NULL,sap_dev_gps char(20) NULL,air_com_port char(3) NULL,air_com_time varchar(24) NULL,air_real_time varchar(24) NULL,sap_cpu_rate char(2) NULL,sap_ram_rate char(2) NULL,data_type char(3) NULL,\
 			gas_data varchar(2048) NULL,ship_data varchar(2048) NULL,\
 			so2 double(12,6) NULL,h2s double(12,6) NULL,nh3 double(12,6) NULL,no2 double(12,6) NULL,no double(12,6) NULL,co double(12,6) NULL,co2 double(12,6) NULL,\
@@ -125,41 +125,41 @@ void TrDatabase::insert_isr(struct sap_mess*& p)								//插入isr_00%s和创建sap_
 			min_temp double(12,6) NULL,ambient_humi double(12,6) NULL,dewp_humi double(12,6) NULL,air_press double(12,6) NULL,luminous double(12,6) NULL,rain_fall double(12,6) NULL,\
 			PRIMARY KEY(sap_index)) ENGINE=InnoDB;", p->sap_isr_id, p->sap_id, p->year_mon);
 
-        state = mysql_query(&db_g2020, st_query);							// 执行创建表的 SQL 查询该表用来存储气体浓度温度等
-        if (0 == state)
-        {
-            std::cout << "Create table sap_" << p->sap_isr_id << p->sap_id << "_" << p->year_mon << " Success!" << std::endl;			// 输出成功消息
-        }
-        else
-        {
-            std::cout << "Create table sap_" << p->sap_isr_id << p->sap_id << "failed: " << mysql_error(&db_g2020) << std::endl;			// 输出创建表失败消息和错误信息
-        }
-    }
-    else
-    {
-        std::cout << "Insert table isr_00" << p->sap_isr_id << "failed: " << mysql_error(&db_g2020) << std::endl;			// 输出插入记录失败消息和错误信息
-    }
+		state = mysql_query(&db_g2020, st_query);							// 执行创建表的 SQL 查询该表用来存储气体浓度温度等
+		if (0 == state)
+		{
+			std::cout << "Create table sap_" << p->sap_isr_id << p->sap_id << "_" << p->year_mon << " Success!" << std::endl;			// 输出成功消息
+		}
+		else
+		{
+			std::cout << "Create table sap_" << p->sap_isr_id << p->sap_id << "failed: " << mysql_error(&db_g2020) << std::endl;			// 输出创建表失败消息和错误信息
+		}
+	}
+	else
+	{
+		std::cout << "Insert table isr_00" << p->sap_isr_id << "failed: " << mysql_error(&db_g2020) << std::endl;			// 输出插入记录失败消息和错误信息
+	}
 }
 
 void TrDatabase::update_isr(struct sap_mess*& p)				//更新isr_00%s		
 {
-    memset(st_query, 0, sizeof(st_query));												// 清空查询缓存	
-    sprintf((char*)st_query, "UPDATE isr_00%s SET sap_id = \'%s\',sap_mac= \'%s\',sap_isr_id= \'%s\',sap_isr_mac= \'%s\',net_id= \'%s\',sap_gps=\'%s\',sap_register_time= \'%s\',sap_com_time= \'%s\',\
+	memset(st_query, 0, sizeof(st_query));												// 清空查询缓存	
+	sprintf((char*)st_query, "UPDATE isr_00%s SET sap_id = \'%s\',sap_mac= \'%s\',sap_isr_id= \'%s\',sap_isr_mac= \'%s\',net_id= \'%s\',sap_gps=\'%s\',sap_register_time= \'%s\',sap_com_time= \'%s\',\
     	com_type= \'%s\',port_type= \'%s\',sap_cpu_rate= \'%s\',sap_ram_rate= \'%s\' WHERE sap_id = \'%s\' AND sap_reg_ym = \'%s\';", \
-        p->sap_isr_id, p->sap_id, p->sap_mac, p->sap_isr_id, p->sap_isr_mac, p->sap_net_id, p->sap_net_id, p->sap_reg_time, p->sap_reg_time, p->sap_com_type, p->sap_port, p->sap_cpu, p->sap_ram, p->sap_id, p->year_mon);
+		p->sap_isr_id, p->sap_id, p->sap_mac, p->sap_isr_id, p->sap_isr_mac, p->sap_net_id, p->sap_net_id, p->sap_reg_time, p->sap_reg_time, p->sap_com_type, p->sap_port, p->sap_cpu, p->sap_ram, p->sap_id, p->year_mon);
 
-    state = mysql_query(&db_g2020, st_query);											// 执行 SQL 查询
+	state = mysql_query(&db_g2020, st_query);											// 执行 SQL 查询
 
-    if (0 == state)
-    {
-        std::cout << "Update table isr_00" << p->sap_isr_id << " Success!" << std::endl;
-        res = mysql_use_result(&db_g2020);
-        mysql_free_result(res);
-    }
-    else
-    {
-        std::cout << "Update table isr_00" << p->sap_isr_id << " Failed: " << mysql_error(&db_g2020) << std::endl;
-    }
+	if (0 == state)
+	{
+		std::cout << "Update table isr_00" << p->sap_isr_id << " Success!" << std::endl;
+		res = mysql_use_result(&db_g2020);
+		mysql_free_result(res);
+	}
+	else
+	{
+		std::cout << "Update table isr_00" << p->sap_isr_id << " Failed: " << mysql_error(&db_g2020) << std::endl;
+	}
 }
 
 void TrDatabase::insert_sap(struct SAP_DATA*& q)			//插入06数据包的SAP数据
@@ -245,7 +245,7 @@ void TrDatabase::sendmail(std::string Message)
 void TrDatabase::ship_isport(std::string Wd, std::string Jd, const char* time)
 {
 	std::cout << "Wd: " << Wd << " " << "Jd: " << Jd << std::endl;											// 打印传入的经度和纬度
-	//if (1050 < Wd1 && Wd1 < 2050 && 1600 < Jd1 && Jd1 < 2540)				//（1203，769）(486,9949)	(443,9940)								// 检查经纬度是否在指定范围内
+
 	long long Wd_val = std::stoll(Wd);
 	long long Jd_val = std::stoll(Jd);
 	if (305585489 < Wd_val && Wd_val < 305595698 && 1084123925 < Jd_val && Jd_val < 1084133666)
@@ -301,7 +301,7 @@ void TrDatabase::handle_04(struct isr_mess*& isr_mess_reg)
 	if (0 == state)																								// 查询成功
 	{
 		res = mysql_use_result(&db_g2020);																		//获取查询结果集
-																//（当使用mysql_use_result时，你必须执行mysql_fetch_row直到NULL值返回。否则那些没有被获取的列将作为你下个请求的一部分返回）
+		//（当使用mysql_use_result时，你必须执行mysql_fetch_row直到NULL值返回。否则那些没有被获取的列将作为你下个请求的一部分返回）
 		if (mysql_fetch_row(res) == NULL)											// 如果查询结果为空，则插入新记录
 		{
 			mysql_free_result(res);													//释放
@@ -326,66 +326,66 @@ void TrDatabase::handle_04(struct isr_mess*& isr_mess_reg)
 
 void TrDatabase::handle_05(struct sap_mess*& sap_mess_reg)
 {
-    memset(st_query, 0, sizeof(st_query));																// 清空查询缓存 st_query里面全部赋值为0
-    sprintf((char*)st_query, "SELECT *FROM isr_total WHERE isr_id = \'%s\';", sap_mess_reg->sap_isr_id);
-    state = mysql_query(&db_g2020, st_query);															// 执行 SQL 查询
-    temp_sql = st_query;																				// 保存查询语句，用于输出调试信息
-    std::cout << "SQL:" << temp_sql << std::endl;
-    if (0 == state)																						//查询成功
-    {
-        res = mysql_use_result(&db_g2020);																//获取查询结果集
-        if (mysql_fetch_row(res) == NULL)																//如果查询结果为空
-        {
-            mysql_free_result(res);																		//释放
-            std::cout << "Failed The ISR device to which the SAP device belongs is not registered..." << std::endl;			//未注册
-        }
-        else
-        {
-            mysql_free_result(res);																		//释放
+	memset(st_query, 0, sizeof(st_query));																// 清空查询缓存 st_query里面全部赋值为0
+	sprintf((char*)st_query, "SELECT *FROM isr_total WHERE isr_id = \'%s\';", sap_mess_reg->sap_isr_id);
+	state = mysql_query(&db_g2020, st_query);															// 执行 SQL 查询
+	temp_sql = st_query;																				// 保存查询语句，用于输出调试信息
+	std::cout << "SQL:" << temp_sql << std::endl;
+	if (0 == state)																						//查询成功
+	{
+		res = mysql_use_result(&db_g2020);																//获取查询结果集
+		if (mysql_fetch_row(res) == NULL)																//如果查询结果为空
+		{
+			mysql_free_result(res);																		//释放
+			std::cout << "Failed The ISR device to which the SAP device belongs is not registered..." << std::endl;			//未注册
+		}
+		else
+		{
+			mysql_free_result(res);																		//释放
 
-            memset(st_query, 0, sizeof(st_query));														// 清空查询缓存st_query里面全部赋值为0
-            sprintf((char*)st_query, "UPDATE isr_total SET net_id = \'%s\',isr_com_time= \'%s\' WHERE isr_id = \'%s\';", sap_mess_reg->sap_net_id, sap_mess_reg->sap_reg_time, sap_mess_reg->sap_isr_id);//更新注册时间
-            state = mysql_query(&db_g2020, st_query);													// 执行 SQL 查询
-            temp_sql = st_query;
-            if (0 == state)
-            {
-                std::cout << "UPDATE isr_total success..." << std::endl;								//更新成功		
-            }
+			memset(st_query, 0, sizeof(st_query));														// 清空查询缓存st_query里面全部赋值为0
+			sprintf((char*)st_query, "UPDATE isr_total SET net_id = \'%s\',isr_com_time= \'%s\' WHERE isr_id = \'%s\';", sap_mess_reg->sap_net_id, sap_mess_reg->sap_reg_time, sap_mess_reg->sap_isr_id);//更新注册时间
+			state = mysql_query(&db_g2020, st_query);													// 执行 SQL 查询
+			temp_sql = st_query;
+			if (0 == state)
+			{
+				std::cout << "UPDATE isr_total success..." << std::endl;								//更新成功		
+			}
 
-            memset(st_query, 0, sizeof(st_query));														// 清空查询缓存st_query里面全部赋值为0	
-            sprintf((char*)st_query, "SELECT *FROM isr_00%s WHERE sap_id = \'%s\' AND sap_reg_ym = \'%s\';", sap_mess_reg->sap_isr_id, sap_mess_reg->sap_id, sap_mess_reg->year_mon);
-            state = mysql_query(&db_g2020, st_query);													// 执行 SQL 查询
-            temp_sql = st_query;																		
-            if (0 == state)																				//如果查询结果为0
-            {
-                res = mysql_use_result(&db_g2020);														//获取查询结果集
-                if (mysql_fetch_row(res) == NULL)
-                {
-                    mysql_free_result(res);																//释放
-                    insert_isr(sap_mess_reg);															//注册ISR
-                }
-                else
-                {
-                    mysql_free_result(res);																//释放
-                    update_isr(sap_mess_reg);															//升级ISR
-                }
-            }
-            else
-            {
-                std::cout << "Failed,The ISR device is not registered..." << std::endl;				//错误这个ISR设备没有注册
-            }
-        }
-    }
-    else
-    {
-        //查询失败，返回错误信息
-        std::cout << "select isr_total error：" << mysql_error(&db_g2020) << std::endl;
-        if (0 != mysql_ping(&db_g2020))
-        {
-            mysql_close(&db_g2020);
-            init_db();
-        }
-    }
+			memset(st_query, 0, sizeof(st_query));														// 清空查询缓存st_query里面全部赋值为0	
+			sprintf((char*)st_query, "SELECT *FROM isr_00%s WHERE sap_id = \'%s\' AND sap_reg_ym = \'%s\';", sap_mess_reg->sap_isr_id, sap_mess_reg->sap_id, sap_mess_reg->year_mon);
+			state = mysql_query(&db_g2020, st_query);													// 执行 SQL 查询
+			temp_sql = st_query;
+			if (0 == state)																				//如果查询结果为0
+			{
+				res = mysql_use_result(&db_g2020);														//获取查询结果集
+				if (mysql_fetch_row(res) == NULL)
+				{
+					mysql_free_result(res);																//释放
+					insert_isr(sap_mess_reg);															//注册ISR
+				}
+				else
+				{
+					mysql_free_result(res);																//释放
+					update_isr(sap_mess_reg);															//升级ISR
+				}
+			}
+			else
+			{
+				std::cout << "Failed,The ISR device is not registered..." << std::endl;				//错误这个ISR设备没有注册
+			}
+		}
+	}
+	else
+	{
+		//查询失败，返回错误信息
+		std::cout << "select isr_total error：" << mysql_error(&db_g2020) << std::endl;
+		if (0 != mysql_ping(&db_g2020))
+		{
+			mysql_close(&db_g2020);
+			init_db();
+		}
+	}
 }
 
 void TrDatabase::handle_06(struct SAP_DATA*& sap_data)
