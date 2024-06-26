@@ -147,66 +147,82 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer\TrServer\Scheduler;G:\通软实验室\船\代码\服务器相关\服务器相关\TrServer\TrServer\Live;/www/server/mysql/lib;/www/server/mysql/include;C:\Program Files\MySQL\MySQL Server 8.0\lib;C:\Program Files\MySQL\MySQL Server 8.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-I/usr/include %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>/www/server/mysql/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+      <AdditionalOptions>-L/usr/lib -lssl -lcrypto %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;/www/server/mysql/include;/www/server/mysql/lib;C:\Program Files\MySQL\MySQL Server 8.0\include;C:\Program Files\MySQL\MySQL Server 8.0\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-I/usr/include %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+      <AdditionalOptions>-L/usr/lib -lssl -lcrypto %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
       <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-I/usr/include %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+      <AdditionalOptions>-L/usr/lib -lssl -lcrypto %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
       <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-I/usr/include %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+      <AdditionalOptions>-L/usr/lib -lssl -lcrypto %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <ClCompile>
       <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-I/usr/include %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+      <AdditionalOptions>-L/usr/lib -lssl -lcrypto %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <ClCompile>
       <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-I/usr/include %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+      <AdditionalOptions>-L/usr/lib -lssl -lcrypto %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <ClCompile>
       <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-I/usr/include %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+      <AdditionalOptions>-L/usr/lib -lssl -lcrypto %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <ClCompile>
       <AdditionalIncludeDirectories>/usr/lib;/usr/include/mysql;F:\Program Files\MySQL\MySQL Server 8.0\lib;F:\Program Files\MySQL\MySQL Server 8.0\include;/www/server/mysql/lib;/www/server/mysql/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-I/usr/include %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>/www/server/mysql/lib/libmysqlclient.so</AdditionalDependencies>
+      <AdditionalOptions>-L/usr/lib -lssl -lcrypto %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

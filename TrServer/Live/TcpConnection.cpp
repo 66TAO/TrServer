@@ -29,6 +29,7 @@ TcpConnection::TcpConnection(UsageEnvironment* env, int clientFd) :
 TcpConnection::~TcpConnection()
 {
     mEnv->scheduler()->removeIOEvent(mClientIOEvent);                   // ´Óµ÷¶ÈÆ÷ÖÐÒÆ³ý¿Í»§¶Ë IOEvent
+    mEnv->scheduler()->removeTimerEventRunEvery(mtimeid);
     delete mClientIOEvent;                                              // É¾³ý¿Í»§¶Ë IOEvent ¶ÔÏó
     delete mClienttimeEvent;
     //    Delete::release(mClientIOEvent);
@@ -103,7 +104,15 @@ void TcpConnection::handleRead() {                                  // ´¦Àí¶ÁÈ¡Ê
 
     if (ret <= 0)                                                   // Èç¹û¶ÁÈ¡³ö´í»òÕß¶ÁÈ¡µÄ×Ö½ÚÊýÐ¡ÓÚµÈÓÚ 0£¬ÔòÈÏÎª¿Í»§¶ËÒÑ¾­¶Ï¿ªÁ¬½Ó
     {
-        LOGE("read error,fd=%d,ret=%d", mClientFd, ret);
+        for (const auto& pair : device_match) {
+            if (pair.second == mClientFd) {
+                string ISR_id = pair.first;
+                LOGE("read error,no isr,fd=%d,ret=%d,ISRid=%c", mClientFd, ret,ISR_id.c_str());
+                handleDisConnect();                                         // ´¦Àí¶Ï¿ªÁ¬½ÓÊÂ¼þ
+                return;
+            }
+        }
+        LOGE("read error,no isr,fd=%d,ret=%d", mClientFd, ret);
         handleDisConnect();                                         // ´¦Àí¶Ï¿ªÁ¬½ÓÊÂ¼þ
         return;
     }
@@ -154,7 +163,16 @@ void TcpConnection::errorCallback(void* arg)
 
 void TcpConnection::timeOutdisconnectCallback(void* arg) {
     TcpConnection* timeOutdisconnect = (TcpConnection*)arg;
-    cout << "time out will close the fd:" << timeOutdisconnect->mClientFd << endl;
+    for (const auto& pair : device_match) {
+        if (pair.second == timeOutdisconnect->mClientFd) {
+            string ISR_id = pair.first;
+            LOGE("time out, will close the fd=%d,ISRid=%c", timeOutdisconnect->mClientFd, ISR_id.c_str());
+            timeOutdisconnect->handleDisConnect();                                         // ´¦Àí¶Ï¿ªÁ¬½ÓÊÂ¼þ
+            return;
+        }
+    }
+    LOGI("time out, will close the fd=%d, no ISRid", timeOutdisconnect->mClientFd);
+    //cout << "time out will close the fd:" << timeOutdisconnect->mClientFd << endl;
     //cout << "time out will close the timefd:" << timeOutdisconnect->mtimeid << endl;
     timeOutdisconnect->handleDisConnect();
 }

@@ -103,6 +103,12 @@ Timer::TimerId EventScheduler::addTimerEventRunEvery(TimerEvent* event, Timer::T
     return mTimerManager->addTimer(event, timeStamp, interval);
 }
 
+Timer::TimerId EventScheduler::removeTimerEventRunEvery(Timer::TimerId timeId)
+{
+    
+    return mTimerManager->removeTimer(timeId);
+}
+
 Timer::TimerId EventScheduler::resetTimerEvent(Timer::TimerId mtimeid, Timer::TimeInterval interval)
 {
     std::cout << "rest timerEvent " << mtimeid << "  Interval = " << interval / 1000 << "s" << std::endl;

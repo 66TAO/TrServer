@@ -32,6 +32,7 @@ public:
     Poller* poller();
 
     Timer::TimerId addTimerEventRunEvery(TimerEvent* event, Timer::TimeInterval interval);
+    Timer::TimerId removeTimerEventRunEvery(Timer::TimerId timeId);
     Timer::TimerId resetTimerEvent(Timer::TimerId mtimeid, Timer::TimeInterval interval);
 
 private:
