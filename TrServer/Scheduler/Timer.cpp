@@ -98,7 +98,15 @@ TimerManager::~TimerManager()
 
 Timer::TimerId TimerManager::addTimer(TimerEvent* event, Timer::TimeStamp timeStamp, Timer::TimeInterval timeInterval)
 {
-	++mLastTimerId;
+	for (auto id = 1; id <= 100; ++id)
+	{
+		if (mTimers.find(id) == mTimers.end())
+		{
+			mLastTimerId = id;
+			break;
+		}
+	}
+	//++mLastTimerId;
 	LOGI("LastTimerId = %d", mLastTimerId);
 	Timer timer(event, timeStamp, timeInterval, mLastTimerId);
 	mTimers.insert(std::make_pair(mLastTimerId, timer));

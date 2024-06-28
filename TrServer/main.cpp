@@ -9,17 +9,17 @@
 int main()
 {
 
-	TrDatabase* Trdb = TrDatabase::createNew();												//´´½¨TrDatabaseÀàÃ»¹ý¶à²Ù×÷
-	EventScheduler* scheduler = EventScheduler::createNew(EventScheduler::POLLER_EPOLL);		//´´½¨Ò»¸öµ÷¶ÈÆ÷ÀàÑ¡ÔñÊ¹ÓÃepoll£¬´´½¨Ò»¸öÈÝÁ¿Îª100µÄ³Ø×Ó
-	UsageEnvironment* env = UsageEnvironment::createNew(scheduler);						//´´½¨Ò»¸öÐÂµÄ»·¾³½«scheduler¸³Öµ¸ømScheduler
+	TrDatabase* Trdb = TrDatabase::createNew();												//ï¿½ï¿½ï¿½ï¿½TrDatabaseï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	EventScheduler* scheduler = EventScheduler::createNew(EventScheduler::POLLER_EPOLL);		//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Ê¹ï¿½ï¿½epollï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª100ï¿½Ä³ï¿½ï¿½ï¿½
+	UsageEnvironment* env = UsageEnvironment::createNew(scheduler);						//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ÂµÄ»ï¿½ï¿½ï¿½ï¿½ï¿½schedulerï¿½ï¿½Öµï¿½ï¿½mScheduler
 
-	Ipv4Address rtspAddr("0.0.0.0", 8888);										//´´½¨Ò»¸öIPv4µØÖ·Àà²¢ÉèÖÃIPºÍ¶Ë¿ÚºÅ	¶Ë¿ÚºÅÎª8888	
+	Ipv4Address rtspAddr("0.0.0.0", 8888);										//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½IPv4ï¿½ï¿½Ö·ï¿½à²¢ï¿½ï¿½ï¿½ï¿½IPï¿½Í¶Ë¿Úºï¿½	ï¿½Ë¿Úºï¿½Îª8888	
 	//Ipv4Address rtspAddr("0.0.0.0", 12345);
-	TrServer* TrServer = TrServer::createNew(env, rtspAddr, Trdb);				//´´½¨Ò»¸ö·þÎñÆ÷ÀàmEnv(env),mAddr(rtspAddr),Trdb(Trdb),ÅäÖÃmAcceptIOEventºÍmCloseTriggerEvent
+	TrServer* TrServer = TrServer::createNew(env, rtspAddr, Trdb);				//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mEnv(env),mAddr(rtspAddr),Trdb(Trdb),ï¿½ï¿½ï¿½ï¿½mAcceptIOEventï¿½ï¿½mCloseTriggerEvent
 	//setReadCallback(readCallback) -> TrServer::readCallback -> TrServer* handleRead -> TrConnection::createNew -> TcpConnection::createNew -> setReadCallback(readCallback) -> TcpConnection::readCallback -> addIOEvent(mClientIOEvent) -> TcpConnection::handleReadBytes() ->  TrConnection::handleReadBytes() 
-	TrServer->start();								//´´½¨Ò»¸ösend_messageµÄÏß³Ì£¬½«mAcceptIOEvent¼ÓÈëµ½µ÷¶ÈÆ÷ÖÐ£¬²¢³õÊ¼»¯Êý¾Ý¿â
+	TrServer->start();								//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½send_messageï¿½ï¿½ï¿½ß³Ì£ï¿½ï¿½ï¿½mAcceptIOEventï¿½ï¿½ï¿½ëµ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½
 
-	env->scheduler()->loop();						//½«µ÷¶ÈÆ÷ÖÐµÄÊÂ¼þ°¤¸ö´¦Àí
+	env->scheduler()->loop();						//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	return 0;
 

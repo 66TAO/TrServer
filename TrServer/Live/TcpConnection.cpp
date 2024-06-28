@@ -107,12 +107,12 @@ void TcpConnection::handleRead() {                                  // ´¦Àí¶ÁÈ¡Ê
         for (const auto& pair : device_match) {
             if (pair.second == mClientFd) {
                 string ISR_id = pair.first;
-                LOGE("read error,no isr,fd=%d,ret=%d,ISRid=%c", mClientFd, ret,ISR_id.c_str());
+                LOGE("read error,fd=%d,ret=%d,ISRid=%s", mClientFd, ret, ISR_id.c_str());
                 handleDisConnect();                                         // ´¦Àí¶Ï¿ªÁ¬½ÓÊÂ¼þ
                 return;
             }
         }
-        LOGE("read error,no isr,fd=%d,ret=%d", mClientFd, ret);
+        LOGE("read error,fd=%d,ret=%d,no ISRid", mClientFd, ret);
         handleDisConnect();                                         // ´¦Àí¶Ï¿ªÁ¬½ÓÊÂ¼þ
         return;
     }
@@ -166,12 +166,12 @@ void TcpConnection::timeOutdisconnectCallback(void* arg) {
     for (const auto& pair : device_match) {
         if (pair.second == timeOutdisconnect->mClientFd) {
             string ISR_id = pair.first;
-            LOGE("time out, will close the fd=%d,ISRid=%c", timeOutdisconnect->mClientFd, ISR_id.c_str());
+            LOGE("time out, will close the fd=%d,timeid=%d,ISRid=%s", timeOutdisconnect->mClientFd, timeOutdisconnect->mtimeid, ISR_id.c_str());
             timeOutdisconnect->handleDisConnect();                                         // ´¦Àí¶Ï¿ªÁ¬½ÓÊÂ¼þ
             return;
         }
     }
-    LOGI("time out, will close the fd=%d, no ISRid", timeOutdisconnect->mClientFd);
+    LOGI("time out, will close the fd=%d,timeid=%d, no ISRid", timeOutdisconnect->mClientFd, timeOutdisconnect->mtimeid);
     //cout << "time out will close the fd:" << timeOutdisconnect->mClientFd << endl;
     //cout << "time out will close the timefd:" << timeOutdisconnect->mtimeid << endl;
     timeOutdisconnect->handleDisConnect();
