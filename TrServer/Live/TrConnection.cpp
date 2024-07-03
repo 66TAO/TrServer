@@ -965,9 +965,14 @@ void TrConnection::parse_33(const string& meg)
 	sap_data_33* sap_data = new sap_data_33;
 
 	string path1;
-	string co2_1;
-	string hum1;
-	string temper_new1;
+	string co_33;
+	string o3_33;
+	string so2_33;
+	string no2_33;
+	string hum_33;
+	string temper_33;
+	string co2_33;
+	string lux_33;
 
 	int flag_start;
 
@@ -979,30 +984,71 @@ void TrConnection::parse_33(const string& meg)
 	cout << "isr_id_new: " << sap_data->isr_id_new << endl;
 	cout << "sap_id_new: " << sap_data->sap_id_new << endl;
 
+	flag_start = meg.find(CO_SENSOR) + 11;
+	co_33 = meg.substr(flag_start, 10);//co的数据
+	sap_data->co_new = co_33.c_str();
+	cout << "co: " << co_33 << endl;	
 
+	flag_start = meg.find(O3_SENSOR) + 11;
+	o3_33 = meg.substr(flag_start, 10);//o3的数据
+	sap_data->o3_new = o3_33.c_str();
+	cout << "o3: " << o3_33 << endl;
 
-	flag_start = meg.find(COD) + 11;
-	co2_1 = meg.substr(flag_start, 10);//co2的数据
-	sap_data->co2_new = co2_1.c_str();
-	cout << "co2: " << co2_1 << endl;
+	flag_start = meg.find(SO2_SENSOR) + 11;
+	so2_33 = meg.substr(flag_start, 10);//so2的数据
+	sap_data->so2_new = so2_33.c_str();
+	cout << "so2: " << so2_33 << endl;
+
+	flag_start = meg.find(NO2_SENSOR) + 11;
+	no2_33 = meg.substr(flag_start, 10);//no2的数据
+	sap_data->no2_new = no2_33.c_str();
+	cout << "no2: " << no2_33 << endl;
 
 	flag_start = meg.find(HUMID_SENSOR) + 11;
-	hum1 = meg.substr(flag_start, 10);							//hum的数据
-	sap_data->hum_new = hum1.c_str();
-	cout << "hum: " << hum1 << endl;
+	hum_33 = meg.substr(flag_start, 10);//湿度的数据
+	sap_data->hum_new = hum_33.c_str();
+	cout << "hum: " << hum_33 << endl;
 
-	flag_start = meg.find(TEMPER_SENSOR) + 11;//sensor_flag=11，正好为“a21026-Rtd=”的长度
-	temper_new1 = meg.substr(flag_start, 10);//温度的数据
-	sap_data->temper_new = temper_new1.c_str();
-	cout << "temper_new: " << temper_new1 << endl;
+	flag_start = meg.find(TEMPER_SENSOR) + 11;
+	temper_33 = meg.substr(flag_start, 10);//温度的数据
+	sap_data->temper_new = temper_33.c_str();
+	cout << "temper: " << temper_33 << endl;
 
+	flag_start = meg.find(CO2_SENSOR) + 11;
+	co2_33 = meg.substr(flag_start, 10);//co2的数据
+	sap_data->co2_new = co2_33.c_str();
+	cout << "co2: " << co2_33 << endl;
+
+	flag_start = meg.find(ILUM) + 11;//sensor_flag=11，正好为“a21026-Rtd=”的长度
+	lux_33 = meg.substr(flag_start, 10);//光照的数据
+	sap_data->luminous_new = lux_33.c_str();
+	cout << "lux: " << lux_33 << endl;
+
+	//SAP_DATA_GET(meg, water_lenth, CO_SENSOR, sap_data->co2_new);		//co
+	//SAP_DATA_GET(meg, water_lenth, O3_SENSOR, sap_data->o3_new);				//o3
+	//SAP_DATA_GET(meg, water_lenth, SO2_SENSOR, sap_data->so2_new);			//so2
+	//SAP_DATA_GET(meg, water_lenth, NO2_SENSOR, sap_data->no2_new);				//no2
+	//SAP_DATA_GET(meg, water_lenth, HUMID_SENSOR, sap_data->hum_new);		//湿度
+	//SAP_DATA_GET(meg, water_lenth, TEMPER_SENSOR, sap_data->temper_new);			//温度
+	//SAP_DATA_GET(meg, water_lenth, CO2_SENSOR, sap_data->co2_new);					//co2
+	//SAP_DATA_GET(meg, water_lenth, ILUM, sap_data->luminous_new);		//光照
 
 	flag_start = meg.find(PATH) + 8;
 	path1 = meg.substr(flag_start, 2);//路径数据
-	sap_data->path_new = path1.c_str();
-	cout << "path: " << path1 << endl;
+	if (strcmp(sap_data->isr_id_new, path1.c_str()) == 0)
+	{
+		string kong;
+		kong = '0';
+		sap_data->path_new = kong.c_str();
+		cout << "path: " << 0 << endl;
+	}
+	else
+	{
+		sap_data->path_new = path1.c_str();
+		cout << "path: " << path1 << endl;
+	}
+	//sap_data->path_new = path1.c_str();
 	//切割结束
-
 	Trdb->handle_33(sap_data);
 
 	delete sap_data;

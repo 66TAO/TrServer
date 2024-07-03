@@ -600,19 +600,24 @@ void TrDatabase::handle_33(struct sap_data_33*& sap_data)
 {
 	memset(st_query, 0, sizeof(st_query));
 	//sprintf((char*)st_query, "INSERT INTO test_table(isr_id, sap_id, path, co2, hum, temper)VALUE(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');",isr_id_new, sap_id_new, path_new, co2_new, hum_new, temper_new);
-	if (strcmp(sap_data->isr_id_new, "19") == 0)
-	{
-		sprintf((char*)st_query, "UPDATE isr19 SET isr_id = \'%s\',sap_id= \'%s\',path= \'%s\',co2= \'%s\',hum= \'%s\',temper= \'%s\';", \
-			sap_data->isr_id_new, sap_data->sap_id_new, sap_data->path_new, sap_data->co2_new, sap_data->hum_new, sap_data->temper_new);
-	}
-	else if (strcmp(sap_data->isr_id_new, "18") == 0)
-	{
-		sprintf((char*)st_query, "UPDATE isr18 SET isr_id = \'%s\',sap_id= \'%s\',path= \'%s\',co2= \'%s\',hum= \'%s\',temper= \'%s\';", \
-			sap_data->isr_id_new, sap_data->sap_id_new, sap_data->path_new, sap_data->co2_new, sap_data->hum_new, sap_data->temper_new);
-	}
-	//sprintf((char*)st_query, "UPDATE test_table SET isr_id = \'%s\',sap_id= \'%s\',path= \'%s\',co2= \'%s\',hum= \'%s\',temper= \'%s\';", \
-	//	sap_data->isr_id_new, sap_data->sap_id_new, sap_data->path_new, sap_data->co2_new, sap_data->hum_new, sap_data->temper_new);
-
+	//if (strcmp(sap_data->isr_id_new, "19") == 0)
+	//{
+	//	sprintf((char*)st_query, "UPDATE isr19 SET isr_id = \'%s\',sap_id= \'%s\',path= \'%s\',co2= \'%s\',hum= \'%s\',temper= \'%s\';", \
+	//		sap_data->isr_id_new, sap_data->sap_id_new, sap_data->path_new, sap_data->co2_new, sap_data->hum_new, sap_data->temper_new);
+	//}
+	//else if (strcmp(sap_data->isr_id_new, "18") == 0)
+	//{
+	//	sprintf((char*)st_query, "UPDATE isr18 SET isr_id = \'%s\',sap_id= \'%s\',path= \'%s\',co2= \'%s\',hum= \'%s\',temper= \'%s\';", \
+	//		sap_data->isr_id_new, sap_data->sap_id_new, sap_data->path_new, sap_data->co2_new, sap_data->hum_new, sap_data->temper_new);
+	//}
+	//if (!sap_data->isr_id_new || !sap_data->sap_id_new || !sap_data->path_new || !sap_data->co_new ||
+	//	!sap_data->o3_new || !sap_data->so2_new || !sap_data->no2_new || !sap_data->hum_new ||
+	//	!sap_data->temper_new || !sap_data->co2_new || !sap_data->luminous_new) {
+	//	std::cerr << "Error: One or more sap_data fields are null." << std::endl;
+	//	return;
+	//}
+	sprintf((char*)st_query, "UPDATE test_table SET isr_id = \'%s\',sap_id= \'%s\',path= \'%s\',co= \'%s\',o3= \'%s\',so2= \'%s\',no2= \'%s\',hum= \'%s\',temper= \'%s\',co2= \'%s\',lux= \'%s\';", \
+		sap_data->isr_id_new, sap_data->sap_id_new, sap_data->path_new, sap_data->co_new, sap_data->o3_new, sap_data->so2_new, sap_data->no2_new, sap_data->hum_new, sap_data->temper_new, sap_data->co2_new, sap_data->luminous_new);
 	state = mysql_query(&db_g2020, st_query);
 	temp_sql = st_query;
 	std::cout << "sql: " << temp_sql << std::endl;
