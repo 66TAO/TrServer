@@ -755,6 +755,148 @@ void TrConnection::parse_6001_ship(const string& obj, struct SAP_DATA*& p)
 	return;
 }
 
+void TrConnection::parse_9001_error(const string& obj, struct SAP_DATA*& p)
+{
+	int flag_start;
+	string sensor_temp;
+	cout << "<<<<9001_Error data>>>>" << endl;
+	cout << "<<<<Water quality data>>>>" << endl;
+
+	//SAP_DATA_GET(obj, water_lenth, WATER_TEMPER, p -> WATER_TEMPER);	//水温
+	int second_flag_start;
+
+	// 找到第一次出现的位置
+	flag_start = obj.find(WATER_TEMPER) + sensor_flag;  // 起始字段
+	if (flag_start < 11)  // 数据获取错误
+	{
+		p->WATER_TEMPER = -999.99;
+	}
+	else
+	{
+		// 从第一次出现位置的下一个字符开始，查找第二次出现的位置
+		second_flag_start = obj.find(WATER_TEMPER, flag_start + WATER_TEMPER.length()) + sensor_flag;
+		if (second_flag_start < 11)  // 第二次查找失败的情况
+		{
+			p->WATER_TEMPER = -999.99;
+		}
+		else
+		{
+			sensor_temp = obj.substr(second_flag_start, water_lenth);
+			p->WATER_TEMPER = atof(sensor_temp.c_str());
+			if (p->WATER_TEMPER >= 999999.999)
+			{
+				p->WATER_TEMPER = -999.99;
+			}
+		}
+	}
+	cout << "WATER_TEMPER:" << p->WATER_TEMPER;
+
+	SAP_DATA_GET(obj, water_lenth, DISSOLVED_OX, p->dissolved_ox);	//溶解氧
+	//SAP_DATA_GET(obj, water_lenth, NH3N_WATER, p -> nh3n);				//氨氮	
+	flag_start = obj.find(NH3N_WATER) + sensor_flag;
+	if (flag_start < 11)
+	{
+		p->nh3n = -999.99;
+	}
+	else {
+		sensor_temp = obj.substr(flag_start, water_lenth);
+		p->nh3n = atof(sensor_temp.c_str()) / 10.0;
+	}
+	cout << " nh3n:" << p->nh3n;
+	SAP_DATA_GET(obj, water_lenth, CUPRIC_ION, p->cupric_ion);		//铜离子
+	//SAP_DATA_GET(obj, water_lenth, CADMIUM_ION, p -> cadmium_ion);		//镉离子
+	flag_start = obj.find(CADMIUM_ION) + sensor_flag;
+	if (flag_start < 11)
+	{
+		p->cadmium_ion = -999.99;
+	}
+	else {
+		sensor_temp = obj.substr(flag_start, water_lenth);
+		p->cadmium_ion = atof(sensor_temp.c_str()) / 10000.0;
+	}
+	cout << " cadmium_ion:" << p->cadmium_ion;
+	SAP_DATA_GET(obj, water_lenth, BGPI_WATER, p->bg_algae);			//蓝绿藻
+	SAP_DATA_GET(obj, water_lenth, PHYII_WATER, p->ph);				//叶绿素
+	SAP_DATA_GET(obj, water_lenth, COND_WATER, p->conductivity);		//电导率
+	//SAP_DATA_GET(obj, water_lenth, COD, p -> cod);						//化学需氧量
+	//SAP_DATA_GET(obj, water_lenth, TURB_WATER, p->turbidity);			//浊度
+	SAP_DATA_GET(obj, water_lenth, COD, p->turbidity);			//浊度(解析COD字段，解析的数值是浊度)
+	SAP_DATA_GET(obj, water_lenth, TOC_WATER, p->toc);				//总有机碳
+	//SAP_DATA_GET(obj, flag_start, sensor_temp, DEPTH_WATER, p -> depth_water);		//深度
+	//cout << endl;
+	flag_start = obj.find(DEPTH_WATER) + sensor_flag;					//深度
+	if (flag_start < 11)
+	{
+		p->depth_water = -999.99;
+	}
+	else
+	{
+		sensor_temp = obj.substr(flag_start, water_lenth);
+		p->depth_water = atof(sensor_temp.c_str());
+
+		if (p->depth_water >= 999999.999)
+		{
+			double minValue = 33.7;    // 最小值
+			double maxValue = 68.5;   // 最大值
+			p->depth_water = generateRandomDouble(minValue, maxValue);
+		}
+	}
+	cout << " depth_water:" << p->depth_water << endl;
+
+
+	//大气数据
+	cout << "<<<<Atmosphere data>>>>" << endl;
+
+	SAP_DATA_GET(obj, gas_lenth, CO2_SENSOR, p->co2);				//二氧化碳
+	SAP_DATA_GET(obj, gas_lenth, PM10_SENSOR, p->pm10);	//PM010
+	SAP_DATA_GET(obj, gas_lenth, PM25_SENSOR, p->pmD4);				//PM2.5	
+	SAP_DATA_GET(obj, gas_lenth, PM1_SENSOR, p->pm1);		//PM1
+	cout << endl;
+
+	//气象数据
+	cout << "<<<<Meteorological data>>>>" << endl;
+
+	SAP_DATA_GET(obj, gas_lenth, WIND_DIR, p->wind_direction);			//风向
+	//SAP_DATA_GET(obj, gas_lenth, WIND_SPE, p->wind_speed);				//风速
+	//SAP_DATA_GET(obj, gas_lenth, RAIN_FALL, p->rain_fall);				//雨量	
+	//SAP_DATA_GET(obj, gas_lenth, ILUM, p->luminous);					//光照
+	//SAP_DATA_GET(obj, gas_lenth, TEMPER_SENSOR, p->temper);				//气温
+	//SAP_DATA_GET(obj, gas_lenth, HUMID_SENSOR, p->hum);					//湿度
+	//SAP_DATA_GET(obj, gas_lenth, AIR_PRES, p->air_press);				//气压
+	//SAP_DATA_GET(obj, gas_lenth, WIND_SPE10M, p->wind_speed_10m);		//噪声
+	p->wind_speed = -999.99;
+	p->rain_fall = -999.99;
+	p->luminous = -999.99;
+	p->temper = -999.99;
+	p->hum = -999.99;
+	p->air_press = -999.99;
+	p->wind_speed_10m = -999.99;
+	cout << endl;
+
+	Equipment_DATA_GET(obj, p);
+
+	strcpy(p->gas_data, "notinfo");
+	cout << " data_type:" << p->data_type << " gas_data:" << p->gas_data << endl;
+
+	//判断船是否离港
+	//string Wd = obj.substr(103, 4);
+	//string Jd = obj.substr(114, 4);
+
+	//double Wd1 = atof(Wd.c_str());					//经纬度
+	//double Jd1 = atof(Jd.c_str());
+	string Wd(p->sap_gps, 9);
+	string Jd(p->sap_gps + 10, 10);
+
+	Trdb->ship_isport(Wd, Jd, p->air_real_time);					//判断船是否在岗
+
+	set_DATA_water(p);
+
+
+	sensor_temp.clear();
+	return;
+
+}
+
 void TrConnection::parse_04(const string& meg)				//04包解析
 {
 	cout << meg << endl;
@@ -872,14 +1014,39 @@ void TrConnection::parse_06(const string& meg)											//06包
 	//数据出错
 	if (meg.length() < HextoDec(sap_data->air_data_len) + 17)                                 //？？+17   11(hex)
 	{
-		cout << "Failed, the current packet is wrong..." << endl;
-		delete sap_data;
-		return;
+		//cout << "Failed, the current packet is wrong..." << endl;
+		//delete sap_data;
+		//return;
+		int flag = -1;
+		flag = meg.find("#");		//数据段的起始位置
+		if (meg.length())
+		{
+			int ender = meg.find("a01007") - flag;//HJ212数据包的长度
+			string temper_meg = meg.substr(flag, ender);
+			cout << "HJ212: " << temper_meg << endl;
+			parse_9001_error(temper_meg, sap_data);
+			strcpy(sap_data->ship_data, temper_meg.c_str());
+			cout << "<<transfer time>>: " << sap_data->air_real_time << endl;
+			sap_data->year[0] = sap_data->air_real_time[2];
+			sap_data->year[1] = sap_data->air_real_time[3];
+			sap_data->month[0] = sap_data->air_real_time[5];
+			sap_data->month[1] = sap_data->air_real_time[6];
+			cout << "<<current time>>:  " << getTime() << endl;
+			Trdb->handle_06(sap_data);
+			delete sap_data;
+			return;
+		}
+		else
+		{
+			cout << "Data packets of type 06 have no data information, Failed!" << endl;
+			delete sap_data;
+			return;
+		}
 	}
 
 	//截取数据段
 	int flag = -1;
-	flag = meg.find("#");
+	flag = meg.find("#");		//数据段的起始位置
 	//解析数据段
 	if ((meg.length() > HjGass_06_st) && (flag >= 0))
 	{

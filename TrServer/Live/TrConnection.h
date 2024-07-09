@@ -55,6 +55,7 @@ private:
     void parse_3001_ship(const string& obj, struct SAP_DATA*& p);
     void parse_car(const string& obj, struct SAP_DATA*& p);
     void parse_6001_ship(const string& obj, struct SAP_DATA*& p);
+	void parse_9001_error(const string& obj, struct SAP_DATA*& p);
 
 private:
     std::string mPeerIp;
