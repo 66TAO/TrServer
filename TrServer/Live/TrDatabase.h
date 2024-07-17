@@ -26,6 +26,7 @@ public:
 	void handle_33(struct sap_data_33*& sap_data);
 	void ship_isport(std::string Wd, std::string Jd, const char* time);
 	void sendmail(std::string Message);
+	void read_wheather(struct SAP_DATA*& sap_data);
 
 private:
 	void insert_total(struct isr_mess*& p);

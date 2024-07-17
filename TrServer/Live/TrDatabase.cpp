@@ -631,3 +631,44 @@ void TrDatabase::handle_33(struct sap_data_33*& sap_data)
 		std::cout << "update test_table Failed: " << mysql_error(&db_g2020) << std::endl;
 	}
 }
+
+void TrDatabase::read_wheather(struct SAP_DATA*& sap_data)
+{
+	memset(st_query, 0, sizeof(st_query));
+	sprintf((char*)st_query, "SELECT temperature,pressure,humidity,precipitation,wind_speed FROM weather_records_yun WHERE station_id = 57339;");
+	state = mysql_query(&db_g2020, st_query);
+	temp_sql = st_query;
+	if (0 == state)
+	{
+		res = mysql_use_result(&db_g2020);
+		if (res == NULL) {
+			LOGE(mysql_error(&db_g2020));
+			return;
+		}
+		while ((row = mysql_fetch_row(res)) != NULL) {
+			sap_data->temper = atof(row[0]);
+			sap_data->air_press = atof(row[1]);
+			sap_data->hum = atof(row[2]);
+			sap_data->rain_fall = atof(row[3]);
+			sap_data->wind_speed = atof(row[4]);
+			//sap_data->wind_direction = atof(row[5]);
+
+			std::cout << "temperature: " << sap_data->temper << " ";
+			std::cout << "presure: " << sap_data->air_press << " ";
+			std::cout << "humidity: " << sap_data->hum << " ";
+			std::cout << "precipitation: " << sap_data->rain_fall << " ";
+			std::cout << "wind_speed: " << sap_data->wind_speed << " ";
+			//std::cout << "wind_direction: " << sap_data->humidity << std::endl;
+		}
+		mysql_free_result(res);
+	}
+	else
+	{
+		std::cout << "select error£º" << mysql_error(&db_g2020) << std::endl;
+		if (0 != mysql_ping(&db_g2020))
+		{
+			mysql_close(&db_g2020);
+			init_db();
+		}
+	}
+}

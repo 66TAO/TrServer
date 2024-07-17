@@ -864,12 +864,13 @@ void TrConnection::parse_9001_error(const string& obj, struct SAP_DATA*& p)
 	//SAP_DATA_GET(obj, gas_lenth, HUMID_SENSOR, p->hum);					//Êª¶È
 	//SAP_DATA_GET(obj, gas_lenth, AIR_PRES, p->air_press);				//ÆøÑ¹
 	//SAP_DATA_GET(obj, gas_lenth, WIND_SPE10M, p->wind_speed_10m);		//ÔëÉù
-	p->wind_speed = -999.99;
-	p->rain_fall = -999.99;
+	Trdb->read_wheather(p);
+	//p->wind_speed = -999.99;
+	//p->rain_fall = -999.99;
 	p->luminous = -999.99;
-	p->temper = -999.99;
-	p->hum = -999.99;
-	p->air_press = -999.99;
+	//p->temper = -999.99;
+	//p->hum = -999.99;
+	//p->air_press = -999.99;
 	p->wind_speed_10m = -999.99;
 	cout << endl;
 
