@@ -7,6 +7,7 @@
 #include "Event.h"
 #include"Timer.h"
 class Poller;
+class ThreadPool;
 
 class EventScheduler
 {

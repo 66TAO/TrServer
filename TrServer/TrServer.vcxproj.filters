@@ -63,6 +63,12 @@
     <ClInclude Include="Scheduler\Timer.h">
       <Filter>Scheduler</Filter>
     </ClInclude>
+    <ClInclude Include="Scheduler\Thread.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="Scheduler\ThreadPool.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Live\Buffer.cpp">
@@ -109,6 +115,12 @@
       <Filter>Live</Filter>
     </ClCompile>
     <ClCompile Include="Scheduler\Timer.cpp">
+      <Filter>Scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="Scheduler\Thread.cpp">
+      <Filter>Scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="Scheduler\ThreadPool.cpp">
       <Filter>Scheduler</Filter>
     </ClCompile>
   </ItemGroup>

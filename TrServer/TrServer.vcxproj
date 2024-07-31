@@ -50,6 +50,8 @@
     <ClInclude Include="Scheduler\Poller.h" />
     <ClInclude Include="Scheduler\SelectPoller.h" />
     <ClInclude Include="Scheduler\SocketsOps.h" />
+    <ClInclude Include="Scheduler\Thread.h" />
+    <ClInclude Include="Scheduler\ThreadPool.h" />
     <ClInclude Include="Scheduler\Timer.h" />
     <ClInclude Include="Scheduler\UsageEnvironment.h" />
   </ItemGroup>
@@ -68,6 +70,8 @@
     <ClCompile Include="Scheduler\Poller.cpp" />
     <ClCompile Include="Scheduler\SelectPoller.cpp" />
     <ClCompile Include="Scheduler\SocketsOps.cpp" />
+    <ClCompile Include="Scheduler\Thread.cpp" />
+    <ClCompile Include="Scheduler\ThreadPool.cpp" />
     <ClCompile Include="Scheduler\Timer.cpp" />
     <ClCompile Include="Scheduler\UsageEnvironment.cpp" />
   </ItemGroup>

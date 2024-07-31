@@ -246,7 +246,7 @@ void TrDatabase::ship_isport(std::string Wd, std::string Jd, const char* time)
 {
 	std::cout << "Wd: " << Wd << " " << "Jd: " << Jd << std::endl;											// 打印传入的经度和纬度
 
-	long long Wd_val = std::stoll(Wd);
+	long long Wd_val = std::stoll(Wd);						//****************
 	long long Jd_val = std::stoll(Jd);
 	if (305585489 < Wd_val && Wd_val < 305595698 && 1084123925 < Jd_val && Jd_val < 1084133666)
 	{

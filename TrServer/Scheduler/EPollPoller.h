@@ -1,5 +1,6 @@
 #pragma once
 #include "Poller.h"
+#include "../Scheduler/UsageEnvironment.h"
 #include <vector>
 
 #include <sys/epoll.h>
@@ -18,8 +19,10 @@ public:
     virtual void handleEvent();
 
 private:
+    //static void taskCallback(void* arg);
     epoll_event Read_events;
     int epollfd;                //epoll实例
     int mMaxNumSockets;
     std::vector<IOEvent*> mIOEvents;// 存储临时活跃的IO事件对象
+   
 };

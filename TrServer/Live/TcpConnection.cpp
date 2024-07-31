@@ -2,6 +2,7 @@
 #include "../Scheduler/SocketsOps.h"
 #include "../Base/Log.h"
 #include "../Scheduler/EventScheduler.h"
+#include "EPollPoller.h"
 
 
 TcpConnection::TcpConnection(UsageEnvironment* env, int clientFd) :
@@ -16,7 +17,6 @@ TcpConnection::TcpConnection(UsageEnvironment* env, int clientFd) :
 
     mClienttimeEvent = TimerEvent::createNew(this);
     mClienttimeEvent->setTimeoutCallback(timeOutdisconnectCallback);
-    //mClienttimeEvent->start();
     mtimeid = mEnv->scheduler()->addTimerEventRunEvery(mClienttimeEvent, 15 * 60 * 1000);//·¢ËÍ22°üµÄ¶¨Ê±¼ä¸ôÎª10·ÖÖÓ10 * 60 * 1000
 
 
@@ -33,7 +33,7 @@ TcpConnection::~TcpConnection()
     delete mClientIOEvent;                                              // É¾³ý¿Í»§¶Ë IOEvent ¶ÔÏó
     delete mClienttimeEvent;
     //    Delete::release(mClientIOEvent);
-
+	LOGI("close mClientIOEvent=%d,mtimeid=%d", mClientFd, mtimeid);
     sockets::close(mClientFd);                                          // ¹Ø±Õ¿Í»§¶ËÎÄ¼þÃèÊö·û
 }
 
@@ -119,8 +119,9 @@ void TcpConnection::handleRead() {                                  // ´¦Àí¶ÁÈ¡Ê
 
     /* ÏÈÈ¡Ïû¶Á */
     //this->disableReadeHandling();
-
-    handleReadBytes();// µ÷ÓÃRtspConnecton¶ÔÏóµÄÊµÏÖº¯Êý             // ´¦Àí¶ÁÈ¡µ½µÄÊý¾Ý         ¡ûÖ÷Òª´¦ÀíÊý¾Ýº¯Êý
+    //handleReadBytes();// µ÷ÓÃRtspConnecton¶ÔÏóµÄÊµÏÖº¯Êý             // ´¦Àí¶ÁÈ¡µ½µÄÊý¾Ý         ¡ûÖ÷Òª´¦ÀíÊý¾Ýº¯Êý
+    mTask.setTaskCallback(taskCallback, this);			  // ÉèÖÃÈÎÎñ»Øµ÷º¯Êý
+    mEnv->threadPool()->addTask(mTask);
 }
 
 void TcpConnection::handleReadBytes() {//TrConnectionÖØÐ´¸Ã·½·¨       ×ÓÀàÖØÐ´
@@ -163,8 +164,10 @@ void TcpConnection::errorCallback(void* arg)
 
 void TcpConnection::timeOutdisconnectCallback(void* arg) {
     TcpConnection* timeOutdisconnect = (TcpConnection*)arg;
+	//LOGI("timeOutdisconnectCallback¡ý¡ý¡ý¡ý¡ý¡ý");
     for (const auto& pair : device_match) {
-        if (pair.second == timeOutdisconnect->mClientFd) {
+        //LOGE("pair.second=%d,timeOutdisconnect->mClientFd=%d", pair.second, timeOutdisconnect->mClientFd);
+        if (pair.second == timeOutdisconnect->mClientFd) {                          //´íÎóµã*****************************
             string ISR_id = pair.first;
             LOGE("time out, will close the fd=%d,timeid=%d,ISRid=%s", timeOutdisconnect->mClientFd, timeOutdisconnect->mtimeid, ISR_id.c_str());
             timeOutdisconnect->handleDisConnect();                                         // ´¦Àí¶Ï¿ªÁ¬½ÓÊÂ¼þ
@@ -172,8 +175,14 @@ void TcpConnection::timeOutdisconnectCallback(void* arg) {
         }
     }
     LOGI("time out, will close the fd=%d,timeid=%d, no ISRid", timeOutdisconnect->mClientFd, timeOutdisconnect->mtimeid);
+    //LOGE("time out, will close the fd=%d,timeid=%d", timeOutdisconnect->mClientFd, timeOutdisconnect->mtimeid);
     //cout << "time out will close the fd:" << timeOutdisconnect->mClientFd << endl;
     //cout << "time out will close the timefd:" << timeOutdisconnect->mtimeid << endl;
-    timeOutdisconnect->handleDisConnect();
+	timeOutdisconnect->handleDisConnect();										 // ´¦Àí¶Ï¿ªÁ¬½ÓÊÂ¼þ
 }
 
+void TcpConnection::taskCallback(void* arg) {
+    TcpConnection* handletask = (TcpConnection*)arg;
+    LOGI("taskCallback");
+    handletask->handleReadBytes();
+}

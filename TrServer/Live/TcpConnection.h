@@ -37,6 +37,7 @@ private:
     static void writeCallback(void* arg);
     static void errorCallback(void* arg);
     static void timeOutdisconnectCallback(void* arg);
+    static void taskCallback(void* arg);
 
 protected:
     UsageEnvironment* mEnv;
@@ -48,4 +49,6 @@ protected:
     void* mArg;
     Buffer mInputBuffer;
     char mBuffer[2048];
+    ThreadPool::Task mTask;
+    //ThreadPool* mThreadPool;
 };

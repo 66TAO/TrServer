@@ -2,9 +2,9 @@
 #include "../Base/Log.h"
 #include <fcntl.h>
 
-EPollPoller::EPollPoller()
+EPollPoller::EPollPoller()   // ¹¹Ôìº¯Êı
 {
-    epollfd = epoll_create(100);
+	epollfd = epoll_create(100);								// ´´½¨Ò»¸ö epoll ÊµÀı
 
 }
 
@@ -40,7 +40,7 @@ bool EPollPoller::updateIOEvent(IOEvent* event)                 // Ìí¼Ó»ò¸üĞÂÒ»¸
     IOEventMap::iterator it = mEventMap.find(fd);               // ²éÕÒ IOEvent ÊÇ·ñÒÑ¾­´æÔÚÓÚÊÂ¼şÓ³Éä±íÖĞ
     if (it != mEventMap.end())                              //ÏÈÇ°ÒÑ¾­Ìí¼ÓÔòĞŞ¸Ä  ´æÔÚ
     {
-        epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &Read_events);
+		epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &Read_events);	//ĞŞ¸ÄIOÊÂ¼ş
     }
     else                                                    //ÏÈÇ°Î´Ìí¼ÓÔòÌí¼ÓIOÊÂ¼ş  ²»´æÔÚ
     {
@@ -84,8 +84,8 @@ void EPollPoller::handleEvent() {                                        // ´¦Àí
 
     ret = epoll_wait(epollfd, events, mMaxNumSockets, -1);              // µÈ´ı¼àÌıµÄËùÓĞfdÏàÓ¦ÊÂ¼şµÄ²úÉú£¨³É¹¦·µ»ØĞèÒª´¦ÀíµÄÊÂ¼şÊıÄ¿¡£Ê§°Ü·µ»Ø0£¬±íÊ¾µÈ´ı³¬Ê±£©
     //epollfd:epollÊµÀıµÄ¾ä±ú    events:epoll°Ñ·¢ÉúµÄÊÂ¼şµÄ¼¯ºÏ´ÓÄÚºË¸´ÖÆµ½ eventsÊı×éÖĞ          mMaxNumSockets:±¾´Î¿ÉÒÔ·µ»ØµÄ×î´óÊÂ¼şÊıÄ¿   -1:Ã»ÓĞ¼ì²âµ½ÊÂ¼ş·¢ÉúÊ±×î¶àµÈ´ıµÄÊ±¼ä£¨×èÈû£©
-
     if (ret < 0) {                                                  // Èç¹û·µ»ØÖµĞ¡ÓÚ 0£¬Ôò·¢Éú´íÎó
+		LOGE("epoll_wait error");
         return;
     }
     else {
@@ -93,7 +93,7 @@ void EPollPoller::handleEvent() {                                        // ´¦Àí
 
     for (int i = 0; i < ret; i++)                                       // °Ñ¼àÌıµ½µÄioÊÂ¼şÈ«²¿´æµ½mIOEventÀïÃæ
     {
-        int sockfd = events[i].data.fd;
+		int sockfd = events[i].data.fd;								 // »ñÈ¡ÎÄ¼şÃèÊö·û
         mEventMap[sockfd]->setREvent(IOEvent::EVENT_READ);              // ÉèÖÃÊÂ¼şÀàĞÍÎª¶ÁÊÂ¼ş
         mIOEvents.push_back(mEventMap[sockfd]);                         // ½«ÊÂ¼şÌí¼Óµ½ÊÂ¼şÁĞ±íÖĞ
     }

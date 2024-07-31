@@ -30,7 +30,6 @@ TrServer::TrServer(UsageEnvironment* env, Ipv4Address& addr, TrDatabase* trdb) :
 
 	mCloseTriggerEvent = TriggerEvent::createNew(this);
 	mCloseTriggerEvent->setTriggerCallback(cbCloseConnect);									//设置回调的关闭连接 函数指针
-
 }
 
 TrServer::~TrServer()
@@ -160,12 +159,6 @@ void TrServer::thread_process_send_message() {
 			}
 		}
 	}
-	if (TS_buf != nullptr) {
-		free(TS_buf);
-	}
-	if (TS_buf1 != nullptr) {
-		free(TS_buf1);
-	}
 }
 
 void TrServer::remove_by_value(std::map<std::string, int>& map, const int& value)				// 移除map中特定的值
@@ -199,6 +192,16 @@ void TrServer::readCallback(void* arg) {								// 进行读操作的回调函数
 
 }
 
+int TrServer::cbAcceptConnect(){
+	int clientFd = sockets::accept(mFd);								// 接受客户端连接，获取客户端套接字文件描述符
+	if (clientFd < 0)
+	{
+		LOGE("handleRead error,clientFd=%d", clientFd);
+		return -1;
+	}
+	return clientFd;
+}
+
 void TrServer::handleRead() {											//处理mAcceptIOEvent// 处理读事件
 	int clientFd = sockets::accept(mFd);								// 接受客户端连接，获取客户端套接字文件描述符
 	if (clientFd < 0)
@@ -206,7 +209,12 @@ void TrServer::handleRead() {											//处理mAcceptIOEvent// 处理读事件
 		LOGE("handleRead error,clientFd=%d", clientFd);
 		return;
 	}
-	TrConnection* conn = TrConnection::createNew(this, Trdb, clientFd);		// 创建新的连接对象    ←主要的数据处理
+	/*int clientFd = cbAcceptConnect();
+	if (clientFd < 0)
+	{
+		return;
+	}*/
+	TrConnection* conn = TrConnection::createNew(this, Trdb, clientFd);		// 创建新的连接对象    
 	conn->setDisConnectCallback(TrServer::cbDisConnect, this);				// 设置连接断开回调函数
 	mConnMap.insert(std::make_pair(clientFd, conn));						// 将连接对象插入连接映射表中
 

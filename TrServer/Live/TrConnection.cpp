@@ -1114,7 +1114,8 @@ void TrConnection::parse_22(const string& meg)
 		cout << a.first << " " << a.second << endl;
 	}
 	time_id = mEnv->scheduler()->resetTimerEvent(mtimeid, 15 * 60 * 1000);
-	cout << "reset outtime and timeid: " << time_id << endl;
+	//cout << "reset outtime and timeid: " << time_id << endl;
+	LOGI("reset outtime and timeid: %d", time_id);
 }
 
 void TrConnection::parse_30()
