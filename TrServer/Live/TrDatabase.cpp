@@ -635,7 +635,7 @@ void TrDatabase::handle_33(struct sap_data_33*& sap_data)
 void TrDatabase::read_wheather(struct SAP_DATA*& sap_data)
 {
 	memset(st_query, 0, sizeof(st_query));
-	sprintf((char*)st_query, "SELECT temperature,pressure,humidity,precipitation,wind_speed FROM weather_records_yun WHERE station_id = 57339;");
+	sprintf((char*)st_query, "SELECT temperature,pressure,humidity,rain_fall,wind_speed FROM weather_records_yun;");
 	state = mysql_query(&db_g2020, st_query);
 	temp_sql = st_query;
 	if (0 == state)
@@ -656,7 +656,7 @@ void TrDatabase::read_wheather(struct SAP_DATA*& sap_data)
 			std::cout << "temperature: " << sap_data->temper << " ";
 			std::cout << "presure: " << sap_data->air_press << " ";
 			std::cout << "humidity: " << sap_data->hum << " ";
-			std::cout << "precipitation: " << sap_data->rain_fall << " ";
+			std::cout << "rain_fall: " << sap_data->rain_fall << " ";
 			std::cout << "wind_speed: " << sap_data->wind_speed << " ";
 			//std::cout << "wind_direction: " << sap_data->humidity << std::endl;
 		}

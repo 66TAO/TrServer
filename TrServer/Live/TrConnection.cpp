@@ -1115,7 +1115,14 @@ void TrConnection::parse_22(const string& meg)
 	}
 	time_id = mEnv->scheduler()->resetTimerEvent(mtimeid, 15 * 60 * 1000);
 	//cout << "reset outtime and timeid: " << time_id << endl;
-	LOGI("reset outtime and timeid: %d", time_id);
+	if (time_id != mtimeid)
+	{
+		LOGI("not find timeid: %d", mtimeid);
+	}
+	else
+	{
+		 LOGI("reset outtime and timeid: %d", time_id);
+	}
 }
 
 void TrConnection::parse_30()

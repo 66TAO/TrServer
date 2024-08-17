@@ -183,6 +183,5 @@ void TcpConnection::timeOutdisconnectCallback(void* arg) {
 
 void TcpConnection::taskCallback(void* arg) {
     TcpConnection* handletask = (TcpConnection*)arg;
-    LOGI("taskCallback");
     handletask->handleReadBytes();
 }

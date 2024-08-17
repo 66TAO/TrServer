@@ -29,7 +29,7 @@ Timer::Timer(TimerEvent* event, TimeStamp timeStamp, TimeInterval timeInterval, 
 	mTimerId(timerId)
 {
 	if (timeStamp > 0) {
-		mRepeat = true;
+		mRepeat = true;					//ÖØ¸´
 	}
 	else {
 		mRepeat = false;
@@ -183,19 +183,19 @@ void TimerManager::handleRead()
 		int expire = timer.mTimeStamp - timeStamp;
 		if (timeStamp > timer.mTimeStamp || expire == 0) {
 			bool isStop = timer.handleEvent();
-			mEvents.erase(it);
-			if (timer.mRepeat) {
-				if (isStop) {
-					mTimers.erase(timer.mTimerId);
-				}
-				else {
-					timer.mTimeStamp = timeStamp + timer.mTimeInterval;
-					mEvents.insert(std::make_pair(timer.mTimeStamp, timer));
-				}
-			}
-			else {
-				mTimers.erase(timer.mTimerId);
-			}
+			//mEvents.erase(it);
+			//if (timer.mRepeat) {
+			//	if (isStop) {
+			//		mTimers.erase(timer.mTimerId);
+			//	}
+			//	else {
+			//		timer.mTimeStamp = timeStamp + timer.mTimeInterval;
+			//		mEvents.insert(std::make_pair(timer.mTimeStamp, timer));
+			//	}
+			//}
+			//else {
+			//	mTimers.erase(timer.mTimerId);
+			//}
 		}
 	}
 	modifyTimeout();
