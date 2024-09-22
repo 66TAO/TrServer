@@ -493,7 +493,7 @@ void TrDatabase::handle_06(struct SAP_DATA*& sap_data)
 							else
 							{
 								std::cout << "Create table sap_" << sap_data->air_isr_id << sap_data->air_sap_id << "_" << sap_data->year << sap_data->month << " Failed: " << mysql_error(&db_g2020) << std::endl;
-								delete sap_data;
+								//delete sap_data;
 								return;
 							}
 
@@ -518,7 +518,7 @@ void TrDatabase::handle_06(struct SAP_DATA*& sap_data)
 							else
 							{
 								std::cout << "INSERT INTO isr_00" << sap_data->air_isr_id << " Failed: " << mysql_error(&db_g2020) << std::endl;
-								delete sap_data;
+								//delete sap_data;
 								return;
 							}
 							//插入数据到新表
@@ -536,14 +536,14 @@ void TrDatabase::handle_06(struct SAP_DATA*& sap_data)
 
 							insert_sap(sap_data);
 							//append_time(sap_data->air_real_time, sap_table_name);//2022-4-11 09:15:45,0102_2207
-							delete sap_data;
+							//delete sap_data;
 							return;
 						}
 						else
 						{
 							mysql_free_result(res);
 							std::cout << "Failed,The SAP device to which the AIR device belongs is not registered!!" << std::endl;
-							delete sap_data;
+							//delete sap_data;
 							return;
 						}
 
@@ -552,7 +552,7 @@ void TrDatabase::handle_06(struct SAP_DATA*& sap_data)
 					{
 						// 表示isr_00xx表不存在，丢弃，只允许通过注册来建表
 						std::cout << "Failed,The SAP device to which the AIR device belongs is not registered!!" << std::endl;
-						delete sap_data;
+						//delete sap_data;
 						return;
 					}
 					//未找到(后期可以考虑回传私有协议包转达：sap设备未成功注册的信息)
@@ -576,6 +576,7 @@ void TrDatabase::handle_06(struct SAP_DATA*& sap_data)
 
 					insert_sap(sap_data);
 					//append_time(sap_data->air_com_time, sap_table_name);
+					//delete sap_data;
 				}
 			}
 			else
