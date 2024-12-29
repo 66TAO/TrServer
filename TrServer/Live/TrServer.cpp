@@ -64,91 +64,76 @@ char* TrServer::protocol_pack_mach_close()												// 创建并返回"close"协议包
 	strcpy(res_pack, "close");
 	return res_pack;
 }
+char* TrServer::protocol_pack_mach_Restart()												// 创建并返回"open"协议包字符串
+{
+	char* res_pack = (char*)malloc(10);													//malloc：分配 10 个字节的内存空间，并将其地址赋给字符指针变量 res_pack(可加判断其是否创建成功)
+	if (res_pack == nullptr) {
+		cerr << "Memory allocation failed!" << endl;
+		exit(EXIT_FAILURE);
+	}
+	strcpy(res_pack, "$15@");															//将 "open" 复制到了 res_pack 所指向的内存空间中
+	return res_pack;
+}
 
 void TrServer::thread_process_send_message() {
 	char b;
 	char* TS_buf = protocol_pack_mach_open();												// 获取"open"协议包字符串
 	char* TS_buf1 = protocol_pack_mach_close();												// 获取"close"协议包字符串
+	char* TS_buf2 = protocol_pack_mach_Restart();												// 获取"Restart"协议包字符串
 	string key1 = "ISR0400000000004";
 	string key2 = "ISR0112912310101";
 	string key3 = "ISR1500000000015";
 	string key4 = "ISR1100000000011";
+	string key5 = "ISR2100000000021";
 	while (1) {
 		while (cin >> b) {
 			switch (b) {
 			case '1':
 				if (device_match.count(key1) > 0) {
-					send(device_match[key1], TS_buf, strlen(TS_buf), MSG_DONTWAIT);//mes_fd套接字文件描述符，strlen(TS_buf)指明发送的字节数长度，MSG_DONTWAIT非阻塞模式发送
-					cout << "Reply 04 open successfully!!" << endl;
+					send(device_match[key1], TS_buf2, strlen(TS_buf2), MSG_DONTWAIT);//mes_fd套接字文件描述符，strlen(TS_buf)指明发送的字节数长度，MSG_DONTWAIT非阻塞模式发送
+					cout << "Reply 04 Restart successfully!!" << endl;
 				}
 				else {
 					cout << "ISR04 be not online" << endl;
 				}
 				break;
 			case '2':
-				if (device_match.count(key1) > 0) {
-					send(device_match[key1], TS_buf1, strlen(TS_buf1), MSG_DONTWAIT);//mes_fd套接字文件描述符，strlen(TS_buf)指明发送的字节数长度，MSG_DONTWAIT非阻塞模式发送
-					cout << "Reply 04 close successfully!!" << endl;
+				if (device_match.count(key2) > 0) {
+					send(device_match[key2], TS_buf2, strlen(TS_buf2), MSG_DONTWAIT);//mes_fd套接字文件描述符，strlen(TS_buf)指明发送的字节数长度，MSG_DONTWAIT非阻塞模式发送
+					cout << "Reply 01 Restart successfully!!" << endl;
 				}
 				else {
-					cout << "ISR04 be not online" << endl;
+					cout << "ISR01 be not online" << endl;
 				}
 				break;
 			case '3':
-				if (device_match.count(key2) > 0) {
-					send(device_match[key2], TS_buf, strlen(TS_buf), MSG_DONTWAIT);//mes_fd套接字文件描述符，strlen(TS_buf)指明发送的字节数长度，MSG_DONTWAIT非阻塞模式发送
-					cout << "Reply 01 message successfully!!" << endl;
+				if (device_match.count(key3) > 0) {
+					send(device_match[key3], TS_buf2, strlen(TS_buf2), MSG_DONTWAIT);//mes_fd套接字文件描述符，strlen(TS_buf)指明发送的字节数长度，MSG_DONTWAIT非阻塞模式发送
+					cout << "Reply 15 Restart successfully!!" << endl;
 				}
 				else {
-					cout << "ISR01 be not online" << endl;
+					cout << "ISR15 be not online" << endl;
 				}
 				break;
 			case '4':
-				if (device_match.count(key2) > 0) {
-					send(device_match[key2], TS_buf1, strlen(TS_buf1), MSG_DONTWAIT);//mes_fd套接字文件描述符，strlen(TS_buf)指明发送的字节数长度，MSG_DONTWAIT非阻塞模式发送
-					cout << "Reply 01 close successfully!!" << endl;
+				if (device_match.count(key4) > 0) {
+					send(device_match[key4], TS_buf2, strlen(TS_buf2), MSG_DONTWAIT);//mes_fd套接字文件描述符，strlen(TS_buf)指明发送的字节数长度，MSG_DONTWAIT非阻塞模式发送
+					cout << "Reply 11 Restart successfully!!" << endl;
 				}
 				else {
-					cout << "ISR01 be not online" << endl;
+					cout << "ISR11 be not online" << endl;
 				}
 				break;
 			case '5':
-				if (device_match.count(key3) > 0) {
-					send(device_match[key3], TS_buf, strlen(TS_buf), MSG_DONTWAIT);//mes_fd套接字文件描述符，strlen(TS_buf)指明发送的字节数长度，MSG_DONTWAIT非阻塞模式发送
-					cout << "Reply 15 message successfully!!" << endl;
+				if (device_match.count(key5) > 0) {
+					send(device_match[key5], TS_buf2, strlen(TS_buf2), MSG_DONTWAIT);//mes_fd套接字文件描述符，strlen(TS_buf)指明发送的字节数长度，MSG_DONTWAIT非阻塞模式发送
+					cout << "Reply 21 Restart successfully!!" << endl;
 				}
 				else {
-					cout << "ISR15 be not online" << endl;
+					cout << "ISR21 be not online" << endl;
 				}
 				break;
 			case '6':
-				if (device_match.count(key3) > 0) {
-					send(device_match[key3], TS_buf1, strlen(TS_buf1), MSG_DONTWAIT);//mes_fd套接字文件描述符，strlen(TS_buf)指明发送的字节数长度，MSG_DONTWAIT非阻塞模式发送
-					cout << "Reply 15 close successfully!!" << endl;
-				}
-				else {
-					cout << "ISR15 be not online" << endl;
-				}
-				break;
-			case '7':
-				if (device_match.count(key4) > 0) {
-					send(device_match[key4], TS_buf, strlen(TS_buf), MSG_DONTWAIT);//mes_fd套接字文件描述符，strlen(TS_buf)指明发送的字节数长度，MSG_DONTWAIT非阻塞模式发送
-					cout << "Reply 11 message successfully!!" << endl;
-				}
-				else {
-					cout << "ISR11 be not online" << endl;
-				}
-				break;
-			case '8':
-				if (device_match.count(key4) > 0) {
-					send(device_match[key4], TS_buf1, strlen(TS_buf1), MSG_DONTWAIT);//mes_fd套接字文件描述符，strlen(TS_buf)指明发送的字节数长度，MSG_DONTWAIT非阻塞模式发送
-					cout << "Reply 11 close successfully!!" << endl;
-				}
-				else {
-					cout << "ISR11 be not online" << endl;
-				}
-				break;
-			case '9':
 				for (auto b : device_match) {
 					cout << b.first << " " << b.second << endl;							// 打印设备映射关系
 				}
@@ -168,6 +153,7 @@ void TrServer::remove_by_value(std::map<std::string, int>& map, const int& value
 		if (it->second == value)
 		{
 			it = map.erase(it);
+			return;
 		}
 		else
 		{
@@ -181,7 +167,7 @@ void TrServer::start() {															// 启动服务器
 	std::thread t1(&TrServer::thread_process_send_message, this);		// 创建一个线程执行消息发送任务
 	t1.detach();														// 分离线程，使其在后台运行
 	mListen = true;														// 标记服务器监听状态为true
-	sockets::listen(mFd, 60);											// 开始监听客户端连接请求，backlog设置为60（最大链接个数）
+	sockets::listen(mFd, 60);											// 开始监听客户端连接请求，backlog设置为60（最大监听个数）
 	mEnv->scheduler()->addIOEvent(mAcceptIOEvent);						// 将Accept事件添加到事件调度器中
 	Trdb->init_db();													// 初始化数据库
 }

@@ -242,7 +242,7 @@ void TrDatabase::sendmail(std::string Message)
 	base->SendEmail(from, passs, vecTo, subject, strMessage, attachment, ccList);//加密的发送，支持抄送、附件等
 }
 
-void TrDatabase::ship_isport(std::string Wd, std::string Jd, const char* time)
+void TrDatabase::ship_9001_isport(std::string Wd, std::string Jd, const char* time)
 {
 	std::cout << "Wd: " << Wd << " " << "Jd: " << Jd << std::endl;											// 打印传入的经度和纬度
 
@@ -287,6 +287,55 @@ void TrDatabase::ship_isport(std::string Wd, std::string Jd, const char* time)
 		else
 		{
 			std::cout << "INSERT INTO ship_state Failed: " << mysql_error(&db_g2020) << std::endl;
+		}
+	}
+}
+
+void TrDatabase::ship_6001_isport(std::string Wd, std::string Jd, const char* time)
+{
+	std::cout << "Wd: " << Wd << " " << "Jd: " << Jd << std::endl;											// 打印传入的经度和纬度
+
+	long long Wd_val = std::stoll(Wd);						//****************
+	long long Jd_val = std::stoll(Jd);
+	if (305585489 < Wd_val && Wd_val < 305595698 && 1084123925 < Jd_val && Jd_val < 1084133666)
+	{
+		std::cout << "Ship in port!!!" << std::endl;															// 如果在指定范围内，打印提示信息：船只在港口内
+		if (flag == 1)
+		{
+			sendmail("Your ship is in port");
+			flag = 0;
+		}
+		memset(st_query, 0, sizeof(st_query));																	// 清空查询缓存
+		sprintf((char*)st_query, "INSERT INTO ship_6001_state(time, ship) VALUE(\'%s\',\'%f\');", time, 0.0);		// 构造插入船只状态表的 SQL 查询语句
+		state = mysql_query(&db_g2020, st_query);																// 执行 SQL 查询
+		temp_sql = st_query;																					// 将查询语句保存到临时变量中
+		if (0 == state)																							// 根据查询执行结果输出相应的信息
+		{
+			std::cout << "INSERT INTO ship_6001_state Success!" << std::endl;
+		}
+		else
+		{
+			std::cout << "INSERT INTO ship_6001_state Failed: " << mysql_error(&db_g2020) << std::endl;
+		}
+	}
+	else {
+		std::cout << "Ship out of port!!!" << std::endl;														// 如果不在指定范围内，打印提示信息：船只不在港口内
+		if (flag == 0)
+		{
+			sendmail("Your ship has cleared the port");
+			flag = 1;
+		}
+		memset(st_query, 0, sizeof(st_query));																	// 清空查询缓存
+		sprintf((char*)st_query, "INSERT INTO ship_6001_state(time, ship) VALUE(\'%s\',\'%f\');", time, 1.0);		// 构造插入船只状态表的 SQL 查询语句
+		state = mysql_query(&db_g2020, st_query);																// 执行 SQL 查询
+		temp_sql = st_query;																					// 将查询语句保存到临时变量中
+		if (0 == state)																							// 根据查询执行结果输出相应的信息
+		{
+			std::cout << "INSERT INTO ship_6001_state Success!" << std::endl;
+		}
+		else
+		{
+			std::cout << "INSERT INTO ship_6001_state Failed: " << mysql_error(&db_g2020) << std::endl;
 		}
 	}
 }

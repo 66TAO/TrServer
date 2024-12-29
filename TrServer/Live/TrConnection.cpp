@@ -201,15 +201,15 @@ void TrConnection::Equipment_DATA_GET(const string& obj, SAP_DATA*& p)
 
 void TrConnection::set_DATA_6001(struct SAP_DATA*& p)
 {
-	//p->so2 = -999.99;
+	p->so2 = -999.99;
 	p->h2s = -999.99;
-	p->nh3 = -999.99;
-	//p->no2 = -999.99;
+	//p->nh3 = -999.99;
+	p->no2 = -999.99;
 	p->no = -999.99;
-	//p->co = -999.99;
+	p->co = -999.99;
 	//p->co2 = -999.99;
-	p->o2 = -999.99;
-	//p->o3 = -999.99;
+	//p->o2 = -999.99;
+	p->o3 = -999.99;
 	p->ch4 = -999.99;
 	p->pm10 = -999.99;
 	p->pmD4 = -999.99;
@@ -495,12 +495,12 @@ void TrConnection::parse_DATA(const string& obj, struct SAP_DATA*& p)
 		parse_3001_ship(obj, p);
 		strcpy(p->ship_data, obj.c_str());
 	}
-	else if (strcmp(p->air_isr_id, "21") == 0)
+	else if (strcmp(p->air_isr_id, "22") == 0)
 	{
 		parse_car(obj, p);
 		strcpy(p->gas_data, obj.c_str());
 	}
-	else if (strcmp(p->air_isr_id, "22") == 0)
+	else if (strcmp(p->air_isr_id, "21") == 0)
 	{
 		parse_6001_ship(obj, p);
 		strcpy(p->ship_data, obj.c_str());
@@ -551,7 +551,11 @@ void TrConnection::parse_water(const string& obj, struct SAP_DATA*& p)		//分析水
 	}
 	else {
 		sensor_temp = obj.substr(flag_start, water_lenth);
-		p->nh3n = atof(sensor_temp.c_str()) / 10.0;
+		p->nh3n = atof(sensor_temp.c_str()) / 100.0;
+		if (p->nh3n >= 999999.999)
+		{
+			p->nh3n = -999.99;
+		}
 	}
 	cout << " nh3n:" << p->nh3n;
 	SAP_DATA_GET(obj, water_lenth, CUPRIC_ION, p->cupric_ion);		//铜离子
@@ -628,10 +632,22 @@ void TrConnection::parse_water(const string& obj, struct SAP_DATA*& p)		//分析水
 
 	//double Wd1 = atof(Wd.c_str());					//经纬度
 	//double Jd1 = atof(Jd.c_str());
-	string Wd(p->sap_gps, 9);
-	string Jd(p->sap_gps + 10, 10);
+	if (strstr(p->sap_gps, "NFFFFEFFFFF") == NULL)
+	{
+		string Wd(p->sap_gps, 9);
+		string Jd(p->sap_gps + 10, 10);
 
-	Trdb->ship_isport(Wd, Jd, p->air_real_time);					//判断船是否在岗
+		bool Wd_is_digit = std::all_of(Wd.begin(), Wd.end(), ::isdigit);
+		bool Jd_is_digit = std::all_of(Jd.begin(), Jd.end(), ::isdigit);
+
+		if (Wd_is_digit && Jd_is_digit) {
+			Trdb->ship_9001_isport(Wd, Jd, p->air_real_time); // 判断船是否在岗
+		}
+		else {
+			cout << "GPS data error" << endl;
+		}
+
+	}
 
 	set_DATA_water(p);
 
@@ -731,24 +747,39 @@ void TrConnection::parse_6001_ship(const string& obj, struct SAP_DATA*& p)
 	SAP_DATA_GET(obj, water_lenth, TURB_WATER, p->turbidity);			//浊度
 	SAP_DATA_GET(obj, water_lenth, PH_WATER, p->ph);					//PH
 	SAP_DATA_GET(obj, water_lenth, WATER_TEMPER, p->WATER_TEMPER);		//水温
-	cout << endl;
 
 	cout << "<<<<Meteorological data>>>>" << endl;
 
-	SAP_DATA_GET(obj, gas_lenth, CO_SENSOR, p->co);				//一氧化碳
-	SAP_DATA_GET(obj, gas_lenth, O3_SENSOR, p->o3);					//臭氧
-	SAP_DATA_GET(obj, gas_lenth, SO2_SENSOR, p->so2);				//二氧化硫
-	SAP_DATA_GET(obj, gas_lenth, NO2_SENSOR, p->no2);				//二氧化氮
-	SAP_DATA_GET(obj, gas_lenth, HUMID_SENSOR, p->hum);				//湿度
-	SAP_DATA_GET(obj, gas_lenth, TEMPER_SENSOR, p->temper);				//气温
+	SAP_DATA_GET(obj, gas_lenth, AMBI_TEMP, p->temper);				//气温
 	SAP_DATA_GET(obj, gas_lenth, CO2_SENSOR, p->co2);				//二氧化碳
+	SAP_DATA_GET(obj, gas_lenth, HUMID_SENSOR, p->hum);				//湿度
 	SAP_DATA_GET(obj, gas_lenth, ILUM, p->luminous);					//光照
+	SAP_DATA_GET(obj, gas_lenth, NH3_SENSOR, p->nh3);				//氨
+	SAP_DATA_GET(obj, gas_lenth, O2_SENSOR, p->o2);				//氧气
 
 	cout << endl;
 
 	Equipment_DATA_GET(obj, p);
 	strcpy(p->gas_data, "notinfo");
 	cout << " data_type:" << p->data_type << " gas_data:" << p->gas_data << endl;
+
+	if (strstr(p->sap_gps, "NFFFFEFFFFF") == NULL)
+	{
+		string Wd(p->sap_gps, 9);
+		string Jd(p->sap_gps + 10, 10);
+
+		bool Wd_is_digit = std::all_of(Wd.begin(), Wd.end(), ::isdigit);
+		bool Jd_is_digit = std::all_of(Jd.begin(), Jd.end(), ::isdigit);
+
+		if (Wd_is_digit && Jd_is_digit) {
+			Trdb->ship_6001_isport(Wd, Jd, p->air_real_time); // 判断船是否在岗
+		}
+		else {
+			cout << "GPS data error" << endl;
+		}
+
+
+	}
 
 	set_DATA_6001(p);
 
@@ -885,10 +916,22 @@ void TrConnection::parse_9001_error(const string& obj, struct SAP_DATA*& p)
 
 	//double Wd1 = atof(Wd.c_str());					//经纬度
 	//double Jd1 = atof(Jd.c_str());
-	string Wd(p->sap_gps, 9);
-	string Jd(p->sap_gps + 10, 10);
+	if (strstr(p->sap_gps, "NFFFFEFFFFF") == NULL)
+	{
+		string Wd(p->sap_gps, 9);
+		string Jd(p->sap_gps + 10, 10);
 
-	Trdb->ship_isport(Wd, Jd, p->air_real_time);					//判断船是否在岗
+		bool Wd_is_digit = std::all_of(Wd.begin(), Wd.end(), ::isdigit);
+		bool Jd_is_digit = std::all_of(Jd.begin(), Jd.end(), ::isdigit);
+
+		if (Wd_is_digit && Jd_is_digit) {
+			Trdb->ship_9001_isport(Wd, Jd, p->air_real_time); // 判断船是否在岗
+		}
+		else {
+			cout << "GPS data error" << endl;
+		}
+
+	}
 
 	set_DATA_water(p);
 
@@ -973,7 +1016,7 @@ void TrConnection::parse_05(const string& meg)							//05包解析
 		sap_mess_reg->year_mon[2] = sap_mess_reg->sap_reg_time[5];
 		sap_mess_reg->year_mon[3] = sap_mess_reg->sap_reg_time[6];
 		cout << "sap_isr_id:" << sap_mess_reg->sap_isr_id << " sap_data_len:" << sap_mess_reg->sap_data_len << " sap_id:" << sap_mess_reg->sap_id << " sap_isr_mac:" << sap_mess_reg->sap_isr_mac << " sap_mac:" << sap_mess_reg->sap_mac << endl;
-		cout << " sap_gps:" << sap_mess_reg->sap_gps << " sap_com_type:" << sap_mess_reg->sap_com_type << " sap_port:" << sap_mess_reg->sap_port << " sap_reg_time:" << sap_mess_reg->sap_reg_time << endl;
+		cout << " sap_gps:" << sap_mess_reg->sap_gps << " sap_com_type:" << sap_mess_reg->sap_com_type << " sap_port:" << sap_mess_reg->sap_port << " sap_reg_time:" << sap_mess_reg->sap_reg_time << " year_mon:" << sap_mess_reg->year_mon << endl;
 
 		Trdb->handle_05(sap_mess_reg);											//处理05包：注册or升级更新SAP
 		delete sap_mess_reg;													//释放
@@ -989,7 +1032,12 @@ void TrConnection::parse_06(const string& meg)											//06包
 {
 	cout << "<<<<06 Packet Analysis>>>> " << endl;
 	SAP_DATA* sap_data = new SAP_DATA;
-
+	if (meg.length() < 69)
+	{
+		cout << "Failed, the current packet is wrong..." << endl;
+		delete sap_data;
+		return;
+	}
 	//私有头解析
 	strcpy(sap_data->air_isr_mac, (meg.substr(IsrMac_06_st, IsrMac_06_len)).c_str());
 	strcpy(sap_data->air_data_len, (meg.substr(datalen_st, datalen_len)).c_str());
@@ -1011,9 +1059,8 @@ void TrConnection::parse_06(const string& meg)											//06包
 	for (auto a : device_match) {
 		cout << a.first << " " << a.second << endl;
 	}
-
 	//数据出错
-	if (meg.length() < HextoDec(sap_data->air_data_len) + 17)                                 //？？+17   11(hex)
+	if (meg.length() < HextoDec(sap_data->air_data_len) + 17)                                
 	{
 		//cout << "Failed, the current packet is wrong..." << endl;
 		//delete sap_data;

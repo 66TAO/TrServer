@@ -11,6 +11,7 @@
 
 
 
+
 class TrServer;
 class TrDatabase;
 class TrConnection : public TcpConnection                   //TrConnection Àà¼Ì³Ð×Ô TcpConnection Àà

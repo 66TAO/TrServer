@@ -34,6 +34,7 @@ private:
     void thread_process_send_message();
     char* protocol_pack_mach_open();
     char* protocol_pack_mach_close();
+    char* protocol_pack_mach_Restart();
     void remove_by_value(std::map<std::string, int>& map, const int& value);
     UsageEnvironment* mEnv;
     int mFd;

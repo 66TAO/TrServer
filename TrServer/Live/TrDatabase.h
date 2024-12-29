@@ -24,7 +24,8 @@ public:
 	void handle_05(struct sap_mess*& sap_mess_reg);
 	void handle_06(struct SAP_DATA*& sap_data);
 	void handle_33(struct sap_data_33*& sap_data);
-	void ship_isport(std::string Wd, std::string Jd, const char* time);
+	void ship_9001_isport(std::string Wd, std::string Jd, const char* time);
+	void ship_6001_isport(std::string Wd, std::string Jd, const char* time);
 	void sendmail(std::string Message);
 	void read_wheather(struct SAP_DATA*& sap_data);
 
